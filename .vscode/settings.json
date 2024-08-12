@@ -1,0 +1,19 @@
+{
+    "[markdown]": {
+        "editor.wordWrap": "bounded",
+        "editor.wordWrapColumn": 100
+    },
+    "python.analysis.extraPaths": [
+        "myapp/test_app"
+    ],
+    "pylint.importStrategy": "fromEnvironment",
+    "isort.args": [
+        "-l 100"
+    ],
+    "autopep8.args": [
+        "--max-line-length=100"
+    ],
+    "pylint.args": [
+        "--rcfile `git root`/.pylintrc"
+    ]
+}

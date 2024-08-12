@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "myapp"
+version = "0.1.0"
+description = "Demonstration of a Python webapp with a database connection."
+authors = ["Yin-Chi Chan <ycc39@cam.ac.uk>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = {extras = ["standard"], version = "^0.112.0"}
+sqlmodel = "^0.0.21"
+pydantic = "^2.8.2"
+asyncpg = "^0.29.0"
+python-dotenv = "^1.0.1"
+pydantic-settings = "^2.4.0"
+uvicorn = {extras = ["standard"], version = "^0.30.5"}
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
+pylint = "^3.2.6"
+
+
+[tool.poetry.group.frontend.dependencies]
+dash = "^2.17.1"
+dash-bootstrap-components = "^1.6.0"
+dash-compose = "^2023.3.12"
+dash-ag-grid = "^31.2.0"
+dash-bootstrap-templates = "^1.2.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
