@@ -25,12 +25,6 @@ async def lifespan(_):
 app = APIRouter(lifespan=lifespan)
 
 
-@app.get('/', summary='Ping')
-async def ping() -> PingResponse:
-    """Ping the app."""
-    return PingResponse()
-
-
 @app.get('/test',
          summary='Get test models')
 async def get_test_models(session: AsyncSession = Depends(get_session)) -> Sequence[TestModel]:
