@@ -7,6 +7,8 @@ import dash_bootstrap_components as dbc
 from dash import Dash, html
 from dash_compose import composition
 
+from myapp.frontend.module_meta import MODULES
+
 if TYPE_CHECKING:
     from collections.abc import Generator
     from dash.development.base_component import Component
@@ -19,15 +21,17 @@ app = Dash(__name__,
            assets_url_path='assets',
            routes_pathname_prefix='/',
            use_pages=True,
-           external_stylesheets=[dbc.themes.LITERA, DBC_CSS])
+           external_stylesheets=[dbc.themes.FLATLY, DBC_CSS])
 
-MODULES = {
-    'Test': 'test'
+NAVBAR_MODULES = {
+    module.short_title: module.href
+    for module in MODULES if not module.external_link and module.active
 }
 """App modules, to be shown under a Modules dropdown in the top navbar."""
 
 NAVBAR_LINKS = {
-    'API docs': '/docs'
+    module.short_title: module.href
+    for module in MODULES if module.external_link and module.active
 }
 """External links to be shown directly in the top navbar."""
 
@@ -35,9 +39,9 @@ NAVBAR_LINKS = {
 @composition
 def layout() -> 'Generator[Component]':
     """The overall page layout."""
-    with html.Div(className='m-0 p-0 dbc') as ret:
-        yield navbar('Demo App', MODULES, NAVBAR_LINKS)
-        with html.Div(style={'margin-top': '72px', 'margin-bottom': '48px'},
+    with html.Div(className='m-0 p-0 dbc', style={'max-width': '1600px'}) as ret:
+        yield navbar('Demo App', NAVBAR_MODULES, NAVBAR_LINKS)
+        with html.Div(style={'margin-top': '96px', 'margin-bottom': '48px'},
                       className='mx-3'):
             yield dash.page_container
         yield bottom_bar()
@@ -61,10 +65,10 @@ def navbar(title: str = 'Demo App',
             `"display_text": "link"`.
     """
     with dbc.NavbarSimple(id='navbar', brand=html.B(title), brand_href='/frontend',
-                          color='dark', dark=True,
+                          color='primary', dark=True,
                           fluid=True, fixed='top', class_name='mx-0 px-0') as ret:
-        yield modules_dropdown(MODULES)
-        for k, v in NAVBAR_LINKS.items():
+        yield modules_dropdown(modules)
+        for k, v in ext_links.items():
             yield dbc.NavLink(k, href=v, target='_blank', external_link=True)
 
     return ret
@@ -88,7 +92,7 @@ def bottom_bar() -> 'Generator[Component]':
     """
     with dbc.Navbar(
         id='bottom-bar',
-        color='dark',
+        color='primary',
         dark=True,
         fixed='bottom',
         class_name='mx-0 px-0 pt-2 pb-0'
