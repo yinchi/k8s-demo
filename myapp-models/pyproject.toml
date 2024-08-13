@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "myapp-models"
+version = "0.1.0"
+description = "Models for MyApp"
+authors = ["Yin-Chi Chan <ycc39@cam.ac.uk>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+sqlmodel = "^0.0.21"
+pydantic = "^2.8.2"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
+pylint = "^3.2.6"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+line_length = 100
+color_output = true
+
+[tool.autopep8]
+max_line_length = 100

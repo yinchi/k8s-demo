@@ -4,7 +4,9 @@
         "editor.wordWrapColumn": 100
     },
     "python.analysis.extraPaths": [
-        "myapp/test_app"
+        "myapp-api/myapp_api",
+        "myapp-frontend/myapp_frontend",
+        "myapp-models/myapp_models"
     ],
     "pylint.importStrategy": "fromEnvironment",
     "isort.args": [
@@ -15,5 +17,6 @@
     ],
     "pylint.args": [
         "--rcfile `git root`/.pylintrc"
-    ]
+    ],
+    "poetryMonorepo.appendExtraPaths": true
 }

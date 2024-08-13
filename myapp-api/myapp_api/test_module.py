@@ -8,9 +8,9 @@ from pydantic import UUID4
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
-from ..db import get_session, init_db
-from ..ping import PingResponse
-from .model import TestModel, TestModelUpdate
+from myapp_models.test_model import TestModel, TestModelUpdate
+
+from .db import get_session, init_db
 
 
 @asynccontextmanager
@@ -22,11 +22,11 @@ async def lifespan(_):
     yield
     # finalise
 
-app = APIRouter(lifespan=lifespan)
+router = APIRouter(lifespan=lifespan)
 
 
-@app.get('/test',
-         summary='Get test models')
+@router.get('/test',
+            summary='Get test models')
 async def get_test_models(session: AsyncSession = Depends(get_session)) -> Sequence[TestModel]:
     """Get the list of TestModel instances in the database."""
     models = await session.execute(select(TestModel))
@@ -34,8 +34,8 @@ async def get_test_models(session: AsyncSession = Depends(get_session)) -> Seque
     return models
 
 
-@app.post('/test',
-          summary='Create test model')
+@router.post('/test',
+             summary='Create test model')
 async def insert_test_model(model: TestModel,
                             session: AsyncSession = Depends(get_session)) -> TestModel:
     """Insert a new TestModel instance into the database. Returns the inserted TestModel."""
@@ -45,8 +45,8 @@ async def insert_test_model(model: TestModel,
     return model
 
 
-@app.get('/test/{obj_id}',
-         summary='Get test model by ID')
+@router.get('/test/{obj_id}',
+            summary='Get test model by ID')
 async def get_test_model(obj_id: UUID4, session: AsyncSession = Depends(get_session)):
     """Get the a TestModel from the database by its ID."""
     model = await session.get(TestModel, obj_id)
@@ -55,12 +55,12 @@ async def get_test_model(obj_id: UUID4, session: AsyncSession = Depends(get_sess
     return model
 
 
-@app.patch('/test/{obj_id}',
-           summary='Update test model')
+@router.patch('/test/{obj_id}',
+              summary='Update test model')
 async def update_test_model(obj_id: UUID4,
                             update: TestModelUpdate,
                             session: AsyncSession = Depends(get_session)):
-    """Find and update a TestModel by its ID."""
+    """Find and update a TestModel by its ID. Returns the updated TestModel."""
     model = await session.get(TestModel, obj_id)
     if model is None:
         raise HTTPException(404, f'No TestModel with ID {obj_id}.')

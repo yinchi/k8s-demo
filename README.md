@@ -81,33 +81,6 @@ secret/sh.helm.release.v1.postgres.v1   helm.sh/release.v1   1      82m
 . destroy.sh
 ```
 
-## Set up a local Docker registry
-
-For development purposes, we want to make our images available to Kubernetes without pushing every single build to a public registry. Instead, we can create a local registry for our images:
-```bash
-pushd `git root`
-./scripts/local_registry_init.sh
-popd
-```
-
-Test the new registry as follows:
-```bash
-docker pull hello-world:latest
-docker image tag hello-world:latest localhost:5000/hello-world:latest
-docker push localhost:5000/hello-world:latest
-docker run --rm -it --pull=always localhost:5000/hello-world:latest
-```
-
-Return a list of available images and tags:
-```bash
-./scripts/local_registry_list.sh
-```
-
-To remove the registry and its associated Docker volume:
-```bash
-docker stop registry && docker rm -v registry
-```
-
 ## Shell scripts
 
-A set of shell scripts are provided in `scripts/` for interacting with the local Docker registry and the webserver container.
+A set of shell scripts and functions are provided in `scripts/` and `load_scripts.sh`.  These include functions for setting up local Docker and Python repositories, ensuring that containerised/kubified applications still have access to any dependencies.

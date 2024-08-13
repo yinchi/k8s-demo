@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "myapp-frontend"
+version = "0.1.0"
+description = "Dash frontend for MyApp"
+authors = ["Yin-Chi Chan <ycc39@cam.ac.uk>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+myapp-models = { version = "^0.1.0", source = "local" }
+requests = "^2.32.3"
+dash = "^2.17.1"
+dash-bootstrap-components = "^1.6.0"
+dash-bootstrap-templates = "^1.2.3"
+dash-compose = "^2023.3.12"
+dash-ag-grid = "^31.2.0"
+python-dotenv = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
+pylint = "^3.2.6"
+
+[[tool.poetry.source]]
+name = "local"
+url = "http://host.docker.internal:31415/simple"
+priority = "explicit"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+line_length = 100
+color_output = true
+known_first_party = ["models"]
+
+[tool.autopep8]
+max_line_length = 100

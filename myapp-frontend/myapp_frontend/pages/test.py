@@ -5,8 +5,6 @@ import dash_bootstrap_components as dbc
 from dash import html
 from dash_compose import composition
 
-from myapp.frontend.module_meta import MODULES
-
 dash.register_page(__name__, path='/test')
 
 

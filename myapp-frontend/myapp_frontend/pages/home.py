@@ -1,9 +1,11 @@
+"""Root page for the MyApp frontend."""
+
 import dash
 import dash_bootstrap_components as dbc
 from dash import html
 from dash_compose import composition
 
-from myapp.frontend.module_meta import MODULES
+from myapp_frontend.module_meta import MODULES
 
 dash.register_page(__name__, path='/')
 

@@ -26,10 +26,10 @@ class PostgresSettings(BaseSettings):
     model_config = SettingsConfigDict(
         str_min_length=1,
         env_prefix='postgres_',
-        env_file=[
-            dotenv.find_dotenv('.env.secret', True),
-            dotenv.find_dotenv('.env', True)
-        ],
+        env_file=[f for f in [
+            dotenv.find_dotenv('.env.secret'),
+            dotenv.find_dotenv('.env')
+        ] if f != ''],  # find_dotenv returns '' if file not found
         case_sensitive=False
     )
 
@@ -40,6 +40,9 @@ DATABASE_URL: PostgresDsn = (
     f'postgresql+asyncpg://{settings.user}:{settings.password}'
     f'@{settings.host}:{settings.port}/{settings.db_name}'
 )
+print('***********************')
+print ('DATABASE URL:', DATABASE_URL)
+print('***********************')
 engine = AsyncEngine(create_engine(DATABASE_URL, echo=True))
 
 

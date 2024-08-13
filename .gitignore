@@ -1,5 +1,9 @@
-.env/
 mnt/
 *secret*
+
+# Python
+.env/
+.venv/
 *pycache*/
 poetry.lock
+dist/

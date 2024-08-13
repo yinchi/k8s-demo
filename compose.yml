@@ -1,0 +1,31 @@
+services:
+  api:
+    image: "localhost:5000/myapp-api:latest"
+    build:
+      context: ./myapp-api
+      extra_hosts:
+        - host.docker.internal=host-gateway
+    extra_hosts:
+      - host.docker.internal=host-gateway
+    ports:
+      - "127.0.0.1:3000:8000"
+    env_file:
+      - ./myapp-api/.env
+      - ./myapp-api/.env.secret
+    environment:
+      - "postgres_host=host.docker.internal"
+  frontend:
+    image: "localhost:5000/myapp-frontend:latest"
+    build:
+      context: ./myapp-frontend
+      extra_hosts:
+        - host.docker.internal=host-gateway
+    extra_hosts:
+      - host.docker.internal=host-gateway
+    ports:
+      - "127.0.0.1:80:8050"
+    env_file:
+      - ./myapp-frontend/.env
+    # environment: any variables set here override the env_file values
+    depends_on:
+      - api

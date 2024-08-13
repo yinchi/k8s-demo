@@ -1,25 +1,23 @@
 """Frontend for MyApp."""
 
 from datetime import datetime
+import os
 from typing import TYPE_CHECKING
 import dash
 import dash_bootstrap_components as dbc
 from dash import Dash, html
 from dash_compose import composition
 
-from myapp.frontend.module_meta import MODULES
+from .module_meta import MODULES
 
 if TYPE_CHECKING:
     from collections.abc import Generator
     from dash.development.base_component import Component
 
 
-DBC_CSS = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
+DBC_CSS = 'https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css'
 
 app = Dash(__name__,
-           requests_pathname_prefix='/frontend/',
-           assets_url_path='assets',
-           routes_pathname_prefix='/',
            use_pages=True,
            external_stylesheets=[dbc.themes.FLATLY, DBC_CSS])
 
@@ -51,20 +49,24 @@ def layout() -> 'Generator[Component]':
 
 @composition
 def navbar(title: str = 'Demo App',
-           modules: dict[str, str] = {}, ext_links: dict[str, str] = {}
+           modules: dict[str, str] | None = None,
+           ext_links: dict[str, str] | None = None
            ) -> 'Generator[Component]':
     """Navigation bar at the top of the app.
 
     Args:
         title (str): The title to show in the top left of the navbar.
-        modules (dict[str,str]):
+        modules (dict[str,str] | None):
             A dict of modules to be shown in a dropdown menu item. Each item is in the form 
             `"display_text": "link"`.
-        ext_links (dict[str,str]):
+        ext_links (dict[str,str] | None):
             A dict of external links to be shown in a dropdown menu item. Each item is in the form
             `"display_text": "link"`.
     """
-    with dbc.NavbarSimple(id='navbar', brand=html.B(title), brand_href='/frontend',
+    modules = {} if modules is None else modules
+    ext_links = {} if ext_links is None else ext_links
+
+    with dbc.NavbarSimple(id='navbar', brand=html.B(title), brand_href='/',
                           color='primary', dark=True,
                           fluid=True, fixed='top', class_name='mx-0 px-0') as ret:
         yield modules_dropdown(modules)
@@ -114,4 +116,5 @@ def bottom_bar() -> 'Generator[Component]':
 app.layout = layout()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    DEBUG = bool(os.environ.get('DEBUG_DASH', False))
+    app.run(debug=DEBUG, host='0.0.0.0')
