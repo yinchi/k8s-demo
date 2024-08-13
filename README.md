@@ -34,6 +34,7 @@ We can read the documentation for each script using the `bashdoc.sh` script, whi
 Create the files and directories as described in the "**Setup**" sections of:
 
 - postgres/README.md
+- myapp-api/README.md
 
 ## Running the cluster
 
@@ -80,6 +81,10 @@ secret/sh.helm.release.v1.postgres.v1   helm.sh/release.v1   1      82m
 ```bash
 . destroy.sh
 ```
+
+## Port forwarding
+
+For development, we may deploy containers on Docker without inserting them into the Kubernetes cluster. The Docker Compose file defines `host.docker.internal` so that Docker containers can communicate with the host machine and access any Kubernetes services that have been set up with `kubectl port-forward`.
 
 ## Shell scripts
 

@@ -1,4 +1,4 @@
-# PostgreSQL setup for myapp
+# PostgreSQL setup for MyApp
 
 ## Setup
 
