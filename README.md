@@ -37,6 +37,8 @@ Create the files and directories as described in the "**Setup**" sections of:
 
 ## Running the cluster
 
+All Kubernetes resources are associated with the `myapp` namespace.
+
 ### Initialisation
 
 Use kind to start a cluster.  The file `config.yaml` is used to set up our file mounts (e.g. for databases).
@@ -106,16 +108,6 @@ To remove the registry and its associated Docker volume:
 docker stop registry && docker rm -v registry
 ```
 
-### Building images
+## Shell scripts
 
-Assuming you are in the same directory as the Dockerfile you want to build:
-```bash
-docker build -t localhost:5000/my-image --push .
-```
-
-### Publishing to ghcr.io
-
-```bash
-export GHCR_USER=<your user or org name>
-./scripts/publish.sh hello-world test
-```
+A set of shell scripts are provided in `scripts/` for interacting with the local Docker registry and the webserver container.
