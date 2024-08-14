@@ -3,7 +3,6 @@
 from collections.abc import Sequence
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import UUID4
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
@@ -46,7 +45,7 @@ async def insert_test_model(_model: TestModelCreate,
 
 @router.get('/test/{obj_id}',
             summary='Get test model by ID')
-async def get_test_model(obj_id: UUID4, session: AsyncSession = Depends(get_session)):
+async def get_test_model(obj_id: int, session: AsyncSession = Depends(get_session)):
     """Get the a TestModel from the database by its ID."""
     model = await session.get(TestModel, obj_id)
     if model is None:
@@ -56,7 +55,7 @@ async def get_test_model(obj_id: UUID4, session: AsyncSession = Depends(get_sess
 
 @router.patch('/test/{obj_id}',
               summary='Update test model')
-async def update_test_model(obj_id: UUID4,
+async def update_test_model(obj_id: int,
                             update: TestModelUpdate,
                             session: AsyncSession = Depends(get_session)):
     """Find and update a TestModel by its ID. Returns the updated TestModel."""
