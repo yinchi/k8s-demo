@@ -15,12 +15,11 @@ class PingResponse(BaseModel):
         title='Response'
     )
 
+
 ### API ###
-
-
 app = FastAPI(
     docs_url='/docs',
-    title='My App \u2014 REST API'
+    title='My App \u2014 REST API',
 )
 
 app.include_router(test_module.router, prefix='/test_module', tags=['Test Module'])

@@ -2,8 +2,11 @@
 
 import dash
 import dash_bootstrap_components as dbc
+import requests
 from dash import html
 from dash_compose import composition
+
+from myapp_frontend.module_meta import API_URL
 
 dash.register_page(__name__, path='/test')
 
@@ -20,3 +23,10 @@ def layout():
         with dbc.Container(class_name='m-0 p-0', fluid=True):
             pass
     return ret
+
+
+def get_data():
+    """Grab all the TestModel data from the database."""
+    response = requests.get(f'{API_URL}/test', timeout=30)
+    assert response.status_code == 200
+    return response.json()

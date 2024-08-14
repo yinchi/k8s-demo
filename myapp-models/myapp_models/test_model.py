@@ -1,24 +1,22 @@
 """SQLModel definitions for the Test module."""
 
-from uuid import uuid4
-
-from pydantic import UUID4
 from sqlmodel import Field, SQLModel
 
 
-class _TestModelBase(SQLModel):
-    """A test model with two fields."""
+class TestModelCreate(SQLModel):
+    """Class for creating a new TestModel object."""
     data1: str
     data2: str
 
 
-class TestModel(_TestModelBase, table=True):
-    """Adds a UUID to the TestModelBase class."""
-    id: UUID4 = Field(
-        default_factory=uuid4,
-        nullable=False,
+class TestModel(SQLModel, table=True):
+    """A test model with a numeric ID and two additional fields."""
+    id: int | None = Field(
+        default=None,
         primary_key=True
     )
+    data1: str
+    data2: str
 
 
 class TestModelUpdate(SQLModel):

@@ -1,12 +1,16 @@
 """Database configuration for the MyApp application."""
+import asyncio
 from collections.abc import AsyncGenerator
+import sys
 
 import dotenv
-from pydantic import Field, PostgresDsn
+from pydantic import Field, PostgresDsn, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel, create_engine
+
+from myapp_models.test_model import TestModel  # pylint: disable=unused-import
 
 
 class PostgresSettings(BaseSettings):
@@ -18,7 +22,7 @@ class PostgresSettings(BaseSettings):
     # Field value priority:
     # https://docs.pydantic.dev/latest/concepts/pydantic_settings/#field-value-priorit
     user: str
-    password: str
+    password: SecretStr
     host: str = 'localhost'
     port: int = Field(default=5432, ge=0, lt=2**16)
     db_name: str = 'myapp'
@@ -37,19 +41,46 @@ class PostgresSettings(BaseSettings):
 settings = PostgresSettings()
 
 DATABASE_URL: PostgresDsn = (
+    f'postgresql+asyncpg://{settings.user}:{settings.password.get_secret_value()}'
+    f'@{settings.host}:{settings.port}/{settings.db_name}'
+)
+
+DATABASE_URL_DISPLAY: PostgresDsn = (
     f'postgresql+asyncpg://{settings.user}:{settings.password}'
     f'@{settings.host}:{settings.port}/{settings.db_name}'
 )
-print('***********************')
-print ('DATABASE URL:', DATABASE_URL)
-print('***********************')
+
 engine = AsyncEngine(create_engine(DATABASE_URL, echo=True))
 
 
-async def init_db():
-    """Create all tables declared in this app."""
+async def init_db(clear: bool = False):
+    """Create all tables declared in this app.
+    
+    Note that since we may use multiple workers in the main app, to avoid race conditions
+    in creating new tables, we will run this function separately by executing this file
+    (poetry run python path/to/this_file.py)
+    """
+
+    print('------------------------------')
+    print('DATABASE URL:', DATABASE_URL_DISPLAY)
+    print('INITIALISING DB SCHEMA')
+    print('------------------------------')
+    print()
+
     async with engine.begin() as conn:
+        if clear:
+            await conn.run_sync(SQLModel.metadata.drop_all)
+            print()
+            print('------------------------------')
+            print(' DROPPED ALL EXISTING TABLES  ')
+            print('------------------------------')
+            print()
         await conn.run_sync(SQLModel.metadata.create_all)
+    print()
+    print()
+    print('DONE')
+    print('Tables:', list(SQLModel.metadata.tables.keys()))
+    print('------------------------------')
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
@@ -63,4 +94,6 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
 
 if __name__ == '__main__':
     print(settings.model_dump())
-    print(DATABASE_URL)
+    print()
+    CLEAR_DB = 'clear' in sys.argv
+    asyncio.run(init_db(clear=CLEAR_DB))

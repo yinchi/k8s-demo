@@ -19,6 +19,7 @@ DBC_CSS = 'https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.mi
 
 app = Dash(__name__,
            use_pages=True,
+           suppress_callback_exceptions=True,
            external_stylesheets=[dbc.themes.FLATLY, DBC_CSS])
 
 NAVBAR_MODULES = {
@@ -116,5 +117,10 @@ def bottom_bar() -> 'Generator[Component]':
 app.layout = layout()
 
 if __name__ == '__main__':
+    DEBUG = os.environ.get('DEBUG_DASH', False)
+    if DEBUG is None or isinstance(DEBUG, str) and DEBUG.lower() in ['0', 'false', 'no']:
+        DEBUG = False
+    else:
+        DEBUG = True
     DEBUG = bool(os.environ.get('DEBUG_DASH', False))
     app.run(debug=DEBUG, host='0.0.0.0')
