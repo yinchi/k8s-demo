@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-myapp-models = { version = "^0.1.0", source = "local" }
+myapp-models = { path = "../myapp-models", develop = true }
 fastapi = { extras = ["standard"], version = "^0.112.0" }
 pydantic = "^2.8.2"
 pydantic-settings = "^2.4.0"
@@ -20,12 +20,6 @@ python-dotenv = "^1.0.1"
 ipykernel = "^6.29.5"
 pylint = "^3.2.6"
 
-
-[[tool.poetry.source]]
-name = "local"
-url = "http://host.docker.internal:31415/simple"
-priority = "explicit"
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
@@ -33,7 +27,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.isort]
 line_length = 100
 color_output = true
-known_first_party = ["models"]
+known_first_party = ["myapp_models"]
 
 [tool.autopep8]
 max_line_length = 100

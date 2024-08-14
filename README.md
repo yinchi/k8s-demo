@@ -88,4 +88,4 @@ For development, we may deploy containers on Docker without inserting them into 
 
 ## Shell scripts
 
-A set of shell scripts and functions are provided in `scripts/` and `load_scripts.sh`.  These include functions for setting up local Docker and Python repositories, ensuring that containerised/kubified applications still have access to any dependencies.
+A set of shell scripts and functions are provided in `scripts/` and `load_scripts.sh`.

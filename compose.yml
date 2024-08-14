@@ -2,7 +2,8 @@ services:
   api:
     image: "localhost:5000/myapp-api:latest"
     build:
-      context: ./myapp-api
+      context: .
+      dockerfile: ./myapp-api/Dockerfile
       extra_hosts:
         - host.docker.internal=host-gateway
     extra_hosts:
@@ -17,7 +18,8 @@ services:
   frontend:
     image: "localhost:5000/myapp-frontend:latest"
     build:
-      context: ./myapp-frontend
+      context: .
+      dockerfile: ./myapp-frontend/Dockerfile
       extra_hosts:
         - host.docker.internal=host-gateway
     extra_hosts:
