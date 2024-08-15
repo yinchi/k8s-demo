@@ -70,10 +70,9 @@ class ModuleMeta(SQLModel):
             with dbc.Button(href=self.href, color=color, disabled=not self.active,
                             external_link=self.external_link,
                             target='_blank' if self.external_link else '_self',
-                            style={'height': '100%', 'width': '18rem'}):
-                with dbc.Card(class_name='m-0 p-0',
-                              style={'height': '100%', 'width': '100%', 'border': 'none',
-                                     'background-color': 'transparent'},
+                            class_name='h-100',
+                            style={'width': '18rem'}):
+                with dbc.Card(class_name='m-0 p-0 h-100 w-100 border-0 bg-transparent',
                               inverse=True):
                     with dbc.CardBody():
                         yield html.H4(self.title, className='card-title')
