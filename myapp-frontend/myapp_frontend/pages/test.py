@@ -27,6 +27,6 @@ def layout():
 
 def get_data():
     """Grab all the TestModel data from the database."""
-    response = requests.get(f'{API_URL}/test', timeout=30)
+    response = requests.get(f'{api_settings.url}/test_module/test', timeout=30)
     assert response.status_code == 200
     return response.json()

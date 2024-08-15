@@ -36,4 +36,5 @@ COPY --exclude=*.venv* /myapp-frontend/ /app/myapp-frontend
 
 WORKDIR /app/myapp-frontend
 ENV DEBUG_DASH=0
+
 CMD python -m myapp_frontend.main

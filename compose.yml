@@ -13,7 +13,7 @@ services:
     env_file:
       - ./myapp-api/.env
       - ./myapp-api/.env.secret
-    environment:
+    environment: # any variables set here override the env_file values
       - "postgres_host=host.docker.internal"
   frontend:
     image: "localhost:5000/myapp-frontend:latest"
@@ -28,6 +28,7 @@ services:
       - "127.0.0.1:80:8050"
     env_file:
       - ./myapp-frontend/.env
-    # environment: any variables set here override the env_file values
+    environment: # any variables set here override the env_file values
+      - "api_url=http://api:8000"
     depends_on:
       - api

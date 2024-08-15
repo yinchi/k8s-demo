@@ -2,15 +2,38 @@
 
 import os
 import dash_bootstrap_components as dbc
-from dotenv import load_dotenv, find_dotenv
 from dash import html
 from dash_compose import composition
+import dotenv
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlmodel import Field, SQLModel
 
-if env_file := find_dotenv('.env') != '':  # find_dotenv returns '' if file not found
-    load_dotenv(env_file)
 
-API_URL = os.environ.get('api')
+class APISettings(BaseSettings):
+    """Configuration settings for the PostgreSQL connection.
+
+    Settings are read from the environment, then from the .env files, then from
+    the default values (if any).
+    """
+    url: str = Field(default='http://localhost:3000')
+
+    model_config = SettingsConfigDict(
+        str_min_length=1,
+        env_prefix='api_',
+        env_file=[f for f in [
+            dotenv.find_dotenv('.env')
+        ] if f != ''],  # find_dotenv returns '' if file not found
+        case_sensitive=False
+    )
+
+
+api_settings = APISettings()
+
+print()
+print('API SETTINGS:')
+print(api_settings)
+print()
+print()
 
 
 class ModuleMeta(SQLModel):
@@ -38,8 +61,11 @@ class ModuleMeta(SQLModel):
             with dbc.Button(href=self.href, color=color, disabled=not self.active,
                             external_link=self.external_link,
                             target='_blank' if self.external_link else '_self',
-                            style={'height': '100%'}):
-                with dbc.Card(style={'width': '18rem'}, color=color, inverse=True):
+                            style={'height': '100%', 'width': '18rem'}):
+                with dbc.Card(class_name='m-0 p-0',
+                              style={'height': '100%', 'width': '100%', 'border': 'none',
+                                     'background-color': 'transparent'},
+                              inverse=True):
                     with dbc.CardBody():
                         yield html.H4(self.title, className='card-title')
                         yield html.P(self.description, className='card-text')
@@ -75,7 +101,7 @@ MODULES = [
         title='API documentation',
         short_title='API docs',
         description='Auto-generated Swagger docs for the REST backend API.',
-        href=f'{API_URL}/docs',
+        href=f'{api_settings.url}/docs',
         external_link=True,
     ),
 ]

@@ -58,7 +58,7 @@ def navbar(title: str = 'Demo App',
     Args:
         title (str): The title to show in the top left of the navbar.
         modules (dict[str,str] | None):
-            A dict of modules to be shown in a dropdown menu item. Each item is in the form 
+            A dict of modules to be shown in a dropdown menu item. Each item is in the form
             `"display_text": "link"`.
         ext_links (dict[str,str] | None):
             A dict of external links to be shown in a dropdown menu item. Each item is in the form
@@ -118,9 +118,9 @@ app.layout = layout()
 
 if __name__ == '__main__':
     DEBUG = os.environ.get('DEBUG_DASH', False)
-    if DEBUG is None or isinstance(DEBUG, str) and DEBUG.lower() in ['0', 'false', 'no']:
+    if (DEBUG is None or DEBUG == 0
+            or (isinstance(DEBUG, str) and DEBUG.lower() in ['0', 'false', 'no'])):
         DEBUG = False
     else:
         DEBUG = True
-    DEBUG = bool(os.environ.get('DEBUG_DASH', False))
     app.run(debug=DEBUG, host='0.0.0.0')
