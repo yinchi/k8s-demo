@@ -13,6 +13,11 @@ dash.register_page(__name__, path='/test')
 
 colDefs = [
     {
+        'field': 'id',
+        'hide': True,
+        'lockVisible': True
+    },
+    {
         'headerName': 'Field 1',
         'field': 'data1'
     },
@@ -36,15 +41,15 @@ colDefs = [
     }
 ]
 
-#region layout
+# region layout
+
 
 @composition
 def layout():
     """Layout for the page."""
     with dbc.Container(
-        id='page-container',
         fluid=True,
-        class_name='mx-3 p-0 dbc'
+        class_name='mx-3 p-0 dbc page-container'
     ) as ret:
         yield html.H1('Test module', className='mb-4')
         with dbc.Container(class_name='m-0 p-0', fluid=True):
@@ -56,10 +61,11 @@ def layout():
                         rowData=add_button_text(get_data()),
                         columnSize="autoSize",
                         defaultColDef={"minWidth": 125},
-                        dashGridOptions = {"suppressCellFocus": True,
-                                           "enableCellTextSelection": True,
-                                           "ensureDomOrder": True,
-                                           "domLayout": "print"},
+                        dashGridOptions={"suppressCellFocus": True,
+                                         "suppressMovable": True,
+                                         "enableCellTextSelection": True,
+                                         "ensureDomOrder": True,
+                                         "domLayout": "print"},
                         style={'height': 'auto'}
                     )
             with dbc.Row(class_name='m-0 p-0'):
@@ -77,6 +83,7 @@ def get_data():
     response = requests.get(f'{api_settings.url}/test_module/test', timeout=30)
     assert response.status_code == 200
     return response.json()
+
 
 def add_button_text(grid_data: list[dict]):
     """Add 'edit' and 'delete' fields to the grid data."""

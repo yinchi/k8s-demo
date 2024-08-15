@@ -14,9 +14,8 @@ dash.register_page(__name__, path='/')
 def layout():
     """Layout for the Dash home page."""
     with dbc.Container(
-        id='page-container',
         fluid=True,
-        class_name='m-0 p-0 dbc'
+        class_name='mx-3 p-0 dbc page-container'
     ) as ret:
         yield html.H1('My app', className='mb-4')
         with dbc.Container(class_name='m-0 p-0', fluid=True):
