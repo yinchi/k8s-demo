@@ -45,12 +45,14 @@ def layout():
                     yield dag.AgGrid(
                         id='grid-test-models',
                         columnDefs=colDefs,
-                        rowData=get_data(),
+                        rowData=add_button_text(get_data()),
                         columnSize="autoSize",
                         defaultColDef={"minWidth": 125},
                         dashGridOptions = {"suppressCellFocus": True,
                                            "enableCellTextSelection": True,
-                                           "ensureDomOrder": True}
+                                           "ensureDomOrder": True,
+                                           "domLayout": "print"},
+                        style={'height': 'auto'}
                     )
             with dbc.Row():
                 with dbc.Col(class_name='mx-0 p-0', width='auto'):
@@ -67,6 +69,11 @@ def get_data():
     response = requests.get(f'{api_settings.url}/test_module/test', timeout=30)
     assert response.status_code == 200
     return response.json()
+
+def add_button_text(grid_data: list[dict]):
+    """Add 'edit' and 'delete' fields to the grid data."""
+    return [{**d, **{'edit': 'Edit 🖉', 'delete': 'Delete 🗑'}} for d in grid_data]
+
 
 # endregion
 
