@@ -19,7 +19,7 @@ def layout():
     ) as ret:
         yield html.H1('My app', className='mb-4')
         with dbc.Container(class_name='m-0 p-0', fluid=True):
-            with dbc.Row(class_name='g-3'):
+            with dbc.Row(class_name='mx-0 g-3'):
                 for module in MODULES:
                     yield module.card()
     return ret
