@@ -4,7 +4,7 @@ import dash
 import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
 import requests
-from dash import html
+from dash import html, dcc, callback, Input, Output
 from dash_compose import composition
 
 from myapp_frontend.module_meta import api_settings
@@ -75,6 +75,30 @@ def layout():
                         id='btn-test-add-row',
                         color='primary'
                     )
+        with dbc.Modal(
+            id='modal-test-add-edit',
+            is_open=False,
+            backdrop='static',
+            keyboard=False
+        ):
+            yield dcc.Store(data={}, id='store-test-update-params')
+            with dbc.ModalHeader(close_button=False):
+                # We will change the title according to modal usage
+                yield dbc.ModalTitle('Add/Edit Row',
+                                     id='modaltitle-test')
+            with dbc.ModalBody():
+                for _ in range(5):
+                    yield 'Form body to appear here!'
+                    yield html.Br()
+            with dbc.ModalFooter():
+                with dbc.Stack(class_name='m-0 p-0', direction='horizontal', gap=3):
+                    yield dbc.Button('Submit!',
+                                     id='btn-modal-test-submit',
+                                     color='primary')
+                    yield dbc.Button('Cancel',
+                                     id='btn-modal-test-cancel',
+                                     color='secondary')
+
     return ret
 
 
@@ -95,5 +119,45 @@ def add_button_text(grid_data: list[dict]):
 ############################
 
 # region callbacks
+
+@callback(
+    Output('store-test-update-params', 'data', allow_duplicate=True),
+    Input('btn-test-add-row', 'n_clicks'),
+    prevent_initial_call = True,
+)
+def trigger_new_row(_):
+    """Populate the Store in the Add/Edit modal with empty values to signal adding a new row.
+    
+    Automatically triggers the `open_add_edit_modal` to open the Add/Edit modal."""
+    print('Callback: trigger_new_row')
+    return {
+        'id': None,
+        'field1': '',
+        'field2': ''
+    }
+
+@callback(
+    Output('store-test-update-params', 'data'),
+    Input('btn-modal-test-cancel', 'n_clicks')
+)
+def cancel_add_edit(_):
+    """Populate the Store in the Add/Edit modal with empty values to signal adding a new row.
+    
+    Automatically triggers the `open_add_edit_modal` to close the Add/Edit modal."""
+    print('Callback: cancel_add_edit')
+    return {}
+
+
+@callback(
+    Output('modal-test-add-edit', 'is_open'),
+    Input('store-test-update-params', 'data')
+)
+def open_add_edit_modal(data: dict):
+    """Opens/Closes the Add/Edit modal if `data` is changed. Opens the modal if `data` is
+    non-empty; closes it if it is empty, i.e. `{}`. Other callbacks can therefore change the
+    visibility of the Add/Edit modal by changing the data in the Store referred to by `data`."""
+    print('Callback: open_add_edit_modal')
+    return len(data.keys()) > 0
+
 
 # endregion
