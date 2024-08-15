@@ -30,5 +30,6 @@ services:
       - ./myapp-frontend/.env
     environment: # any variables set here override the env_file values
       - "api_url=http://api:8000"
+      - "DEBUG_DASH=0"
     depends_on:
       - api

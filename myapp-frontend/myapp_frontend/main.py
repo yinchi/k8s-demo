@@ -117,7 +117,7 @@ def bottom_bar() -> 'Generator[Component]':
 app.layout = layout()
 
 if __name__ == '__main__':
-    DEBUG = os.environ.get('DEBUG_DASH', False)
+    DEBUG = os.environ.get('DEBUG_DASH', True)
     if (DEBUG is None or DEBUG == 0
             or (isinstance(DEBUG, str) and DEBUG.lower() in ['0', 'false', 'no'])):
         DEBUG = False
