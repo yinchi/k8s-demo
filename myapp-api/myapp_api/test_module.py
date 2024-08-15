@@ -16,7 +16,7 @@ router = APIRouter()
             summary='Get test models')
 async def get_test_models(session: AsyncSession = Depends(get_session)) -> Sequence[TestModel]:
     """Get the list of TestModel instances in the database."""
-    models = await session.execute(select(TestModel))
+    models = await session.execute(select(TestModel).order_by(TestModel.id))
     models = models.scalars().all()
     return models
 
