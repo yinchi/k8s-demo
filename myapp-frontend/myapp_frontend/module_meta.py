@@ -1,10 +1,12 @@
 """Metadata on the modules of the app."""
 
 import os
+from typing import Self
 import dash_bootstrap_components as dbc
 from dash import html
 from dash_compose import composition
 import dotenv
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlmodel import Field, SQLModel
 
@@ -16,6 +18,7 @@ class APISettings(BaseSettings):
     the default values (if any).
     """
     url: str = Field(default='http://localhost:3000')
+    public_url: str | None = Field(default=None)
 
     model_config = SettingsConfigDict(
         str_min_length=1,
@@ -25,6 +28,12 @@ class APISettings(BaseSettings):
         ] if f != ''],  # find_dotenv returns '' if file not found
         case_sensitive=False
     )
+
+    @model_validator(mode='after')
+    def check_public_url(self) -> Self:
+        if self.public_url is None:
+            self.public_url = self.url
+        return self
 
 
 api_settings = APISettings()
@@ -101,7 +110,7 @@ MODULES = [
         title='API documentation',
         short_title='API docs',
         description='Auto-generated Swagger docs for the REST backend API.',
-        href=f'{api_settings.url}/docs',
+        href=f'{api_settings.public_url}/docs',
         external_link=True,
     ),
 ]
