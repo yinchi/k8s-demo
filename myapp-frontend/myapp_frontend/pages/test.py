@@ -21,10 +21,18 @@ colDefs = [
         'field': 'data2'
     },
     {
-        'field': 'edit'
+        'field': 'edit',
+        'cellRenderer': 'DBC_Button',
+        'cellRendererParams': {
+            'color': 'primary'
+        }
     },
     {
-        'field': 'delete'
+        'field': 'delete',
+        'cellRenderer': 'DBC_Button',
+        'cellRendererParams': {
+            'color': 'danger'
+        }
     }
 ]
 
@@ -40,8 +48,8 @@ def layout():
     ) as ret:
         yield html.H1('Test module', className='mb-4')
         with dbc.Container(class_name='m-0 p-0', fluid=True):
-            with dbc.Row():
-                with dbc.Col(class_name='mx-0 mb-1 p-0', width=12):
+            with dbc.Row(class_name='mx-0 mb-1 p-0'):
+                with dbc.Col(class_name='m-0 p-0', width=12):
                     yield dag.AgGrid(
                         id='grid-test-models',
                         columnDefs=colDefs,
@@ -54,8 +62,8 @@ def layout():
                                            "domLayout": "print"},
                         style={'height': 'auto'}
                     )
-            with dbc.Row():
-                with dbc.Col(class_name='mx-0 p-0', width='auto'):
+            with dbc.Row(class_name='m-0 p-0'):
+                with dbc.Col(class_name='m-0 p-0', width='auto'):
                     yield dbc.Button(
                         'Add row',
                         id='btn-test-add-row',
