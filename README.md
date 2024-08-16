@@ -88,4 +88,4 @@ For development, we may deploy containers on Docker without inserting them into 
 
 ## Shell scripts
 
-A set of shell scripts and functions are provided in `scripts/` and `load_scripts.sh`.
+A set of shell scripts and functions are provided in `scripts/` and `load_scripts.sh`. A utility script `prepend_path` is required; copy this to a directory on your `$PATH`, e.g. `$HOME/.local/bin`.

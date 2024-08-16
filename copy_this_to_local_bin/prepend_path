@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# Prepend a path to $PATH, removing duplicates.
+#
+# Copy this file to a directory on your $PATH, e.g. $HOME/.local/bin
+
+prepend_path_fn() {
+    local new_path="$(readlink -f $1)"
+    
+    # If $PATH is empty, just set it to the new path
+    if [ -z "$PATH" ]; then
+        export PATH="$new_path"
+        return
+    fi
+
+    # Convert $PATH into an array, removing duplicates of the new path
+    IFS=':' read -r -a path_array <<< "$PATH"
+    new_path_list=("$new_path")
+    for element in "${path_array[@]}"; do
+        if [ "$element" != "$new_path" ]; then
+            new_path_list+=("$element")
+        fi
+    done
+
+    # Join the array into a colon-separated string
+    export PATH=$(IFS=:; echo "${new_path_list[*]}")
+}
+
+# Example usage:
+# Check if a path was provided as an argument
+if [ -z "$1" ]; then
+    echo "Usage: $0 /path/to/prepend"
+    exit 1
+fi
+
+# Call the function with the provided path
+prepend_path_fn "$1"
+
+# Optional: Print the new PATH for verification
+echo "New PATH: $PATH"
+

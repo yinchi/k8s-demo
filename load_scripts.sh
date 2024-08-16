@@ -6,15 +6,16 @@
 #
 # Add the scripts directory to the system path and sets some environment variables.
 
-export PATH=`git root`/scripts:$PATH
+prepend_path `git root`/scripts
 
 # Get the github user/org from the remote git URL, e.g. 'yinchi' for
 # 'https://github.com/yinchi/...'. The matching repository URL prefix is 'ghcr.io/yinchi/...'.
 export GHCR_USER=$(git remote get-url origin | cut -d'/' -f4)
 
-echo "Added $(git root) to PATH"
 echo "Set GHCR_USER to $GHCR_USER"
 echo "Set MYAPP to myapp"
 
 alias popy="poetry run python"
 alias polint="poetry run pylint --rcfile=`git root`/.pylintrc"
+
+alias db_expose="screen -dmS myapp-postgres-portfwd kubectl port-forward -n myapp svc/postgres --address 0.0.0.0 5432:5432 &"
