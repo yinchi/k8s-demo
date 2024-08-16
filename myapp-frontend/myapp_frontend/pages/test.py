@@ -1,10 +1,12 @@
 """Dash page for the Test module of the app."""
 
+import json
+
 import dash
 import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
 import requests
-from dash import html, dcc, callback, Input, Output
+from dash import Input, Output, State, callback, dcc, html
 from dash_compose import composition
 
 from myapp_frontend.module_meta import api_settings
@@ -75,6 +77,11 @@ def layout():
                         id='btn-test-add-row',
                         color='primary'
                     )
+                with dbc.Col(class_name='ms-3 my-auto p-0', width='auto'):
+                    yield html.Span(
+                        '(No grid button clicked yet)',
+                        id='span-test-debug',
+                    )
         with dbc.Modal(
             id='modal-test-add-edit',
             is_open=False,
@@ -122,30 +129,35 @@ def add_button_text(grid_data: list[dict]):
 
 @callback(
     Output('store-test-update-params', 'data', allow_duplicate=True),
+    Output('span-test-debug', 'children', allow_duplicate=True),
     Input('btn-test-add-row', 'n_clicks'),
-    prevent_initial_call = True,
+    prevent_initial_call=True
 )
 def trigger_new_row(_):
     """Populate the Store in the Add/Edit modal with empty values to signal adding a new row.
-    
+
     Automatically triggers the `open_add_edit_modal` to open the Add/Edit modal."""
-    print('Callback: trigger_new_row')
-    return {
-        'id': None,
-        'field1': '',
-        'field2': ''
+    ret = {
+        'action': 'add',
+        'rowData': {
+            'id': None,
+            'field1': '',
+            'field2': ''
+        }
     }
+    return ret, json.dumps(ret)
+
 
 @callback(
     Output('store-test-update-params', 'data'),
+    Output('span-test-debug', 'children'),
     Input('btn-modal-test-cancel', 'n_clicks')
 )
 def cancel_add_edit(_):
     """Populate the Store in the Add/Edit modal with empty values to signal adding a new row.
-    
+
     Automatically triggers the `open_add_edit_modal` to close the Add/Edit modal."""
-    print('Callback: cancel_add_edit')
-    return {}
+    return {}, '{}'
 
 
 @callback(
@@ -156,8 +168,22 @@ def open_add_edit_modal(data: dict):
     """Opens/Closes the Add/Edit modal if `data` is changed. Opens the modal if `data` is
     non-empty; closes it if it is empty, i.e. `{}`. Other callbacks can therefore change the
     visibility of the Add/Edit modal by changing the data in the Store referred to by `data`."""
-    print('Callback: open_add_edit_modal')
-    return len(data.keys()) > 0
+    return data.get('action', 'none') in ['add', 'edit']
 
+
+@callback(
+    Output('store-test-update-params', 'data', allow_duplicate=True),
+    Output('span-test-debug', 'children', allow_duplicate=True),
+    Input('grid-test-models', 'cellRendererData'),
+    State('grid-test-models', 'rowData'),
+    prevent_initial_call=True
+)
+def showChange(data: dict, grid_data: dict):
+    # return json.dumps(data)
+    ret = {
+        'action': data['colId'],
+        'rowData': grid_data[int(data[('rowId')])]
+    }
+    return ret, json.dumps(ret)
 
 # endregion
