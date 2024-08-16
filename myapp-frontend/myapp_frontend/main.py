@@ -1,8 +1,9 @@
 """Frontend for MyApp."""
 
-from datetime import datetime
 import os
+from datetime import datetime
 from typing import TYPE_CHECKING
+
 import dash
 import dash_bootstrap_components as dbc
 from dash import Dash, html
@@ -12,6 +13,7 @@ from .module_meta import MODULES
 
 if TYPE_CHECKING:
     from collections.abc import Generator
+
     from dash.development.base_component import Component
 
 

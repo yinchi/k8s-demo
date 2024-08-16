@@ -2,10 +2,11 @@
 
 import os
 from typing import Self
+
 import dash_bootstrap_components as dbc
+import dotenv
 from dash import html
 from dash_compose import composition
-import dotenv
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlmodel import Field, SQLModel

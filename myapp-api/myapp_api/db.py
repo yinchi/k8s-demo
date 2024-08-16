@@ -1,7 +1,7 @@
 """Database configuration for the MyApp application."""
 import asyncio
-from collections.abc import AsyncGenerator
 import sys
+from collections.abc import AsyncGenerator
 
 import dotenv
 from pydantic import Field, PostgresDsn, SecretStr
