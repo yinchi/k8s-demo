@@ -1,11 +1,9 @@
 services:
   api:
-    image: "localhost:5000/myapp-api:latest"
+    image: "ghcr.io/yinchi/myapp-api:latest"
     build:
       context: .
       dockerfile: ./myapp-api/Dockerfile
-      extra_hosts:
-        - host.docker.internal=host-gateway
     extra_hosts:
       - host.docker.internal=host-gateway
     ports:
@@ -16,14 +14,10 @@ services:
     environment: # any variables set here override the env_file values
       - "postgres_host=host.docker.internal"
   frontend:
-    image: "localhost:5000/myapp-frontend:latest"
+    image: "ghcr.io/yinchi/myapp-frontend:latest"
     build:
       context: .
       dockerfile: ./myapp-frontend/Dockerfile
-      extra_hosts:
-        - host.docker.internal=host-gateway
-    extra_hosts:
-      - host.docker.internal=host-gateway
     ports:
       - "127.0.0.1:80:8050"
     env_file:
