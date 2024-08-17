@@ -239,59 +239,49 @@ def grid_btn_action(data: dict, grid_data: dict):
     return ret
 
 
-@callback(
+clientside_callback(
+    # Validate the input for Field 1. Set the CSS properties of the Input field according to
+    # the validity, and display an error message in the FormFeedback element if invalid.
+    """function (val) {
+        if (val === null || val === '') {
+            return [false, true, 'String is empty!'];
+        } else if (/^[ -~¡-¬®-ÿ€]+$/.test(val)) {
+            return [true, false, ''];
+        } else return [false, true, 'Invalid characters in string!']
+    }""",
     Output('input-test-field1', 'valid'),
     Output('input-test-field1', 'invalid'),
     Output('input-test-field1-fbck', 'children'),
     Input('input-test-field1', 'value')
 )
-def validate_field1(text: Optional[str]):
-    """Validate the input for Field 1. Set the CSS properties of the Input field according to
-    the validity, and display an error message in the FormFeedback element if invalid."""
-    return validate_str(text)
 
 
-@callback(
+clientside_callback(
+    # Validate the input for Field 2. Set the CSS properties of the Input field according to
+    # the validity, and display an error message in the FormFeedback element if invalid.
+    """function (val) {
+        if (val === null || val === '') {
+            return [false, true, 'String is empty!'];
+        } else if (/^[ -~¡-¬®-ÿ€]+$/.test(val)) {
+            return [true, false, ''];
+        } else return [false, true, 'Invalid characters in string!']
+    }""",
     Output('input-test-field2', 'valid'),
     Output('input-test-field2', 'invalid'),
     Output('input-test-field2-fbck', 'children'),
     Input('input-test-field2', 'value')
 )
-def validate_field2(text: Optional[str]):
-    """Validate the input for Field 1. Set the CSS properties of the Input field according to
-    the validity, and display an error message in the FormFeedback element if invalid."""
-    return validate_str(text)
 
 
-def validate_str(text: Optional[str]):
-    """Checks if a string is valid.
-
-    Returns:
-        tuple[bool,bool,str]: 
-            - Is the string valid?
-            - Is the string invalid?
-            - Error message to display if the string is invalid.
-    """
-    if text is None or text == '':
-        is_valid = False
-        msg = 'String is empty!'
-    else:
-        # Basic Latin and Latin-1 Supplement code blocks, except &nbsp; and &shy;
-        pattern = '[ -~¡-¬®-ÿ€]+'
-        is_valid = text is not None and re.fullmatch(pattern, text) is not None
-        msg = '' if is_valid else 'String contains illegal characters!'
-
-    return is_valid, not is_valid, msg
-
-
-@callback(
+clientside_callback(
+    # Disable the modal form if any of its inputs are invalid.
+    """function (i1, i2) {
+        return i1 || i2;
+    }""",
     Output('btn-modal-test-submit', 'disabled'),
     Input('input-test-field1', 'invalid'),
     Input('input-test-field2', 'invalid')
 )
-def validate_modal_form(i1: bool, i2: bool):
-    """Disable the modal form if any of its inputs are invalid."""
-    return i1 or i2
 
 
 @callback(
@@ -307,6 +297,10 @@ def submit_add_edit(_, data, val1, val2):
     """Add to or update the TestModel database table according to the current action,
     stored in the `data` argument. When done, update `data` to the empty dict to
     signal no current action."""
+
+    # TODO: validate data again and show error message if user somehow bypassed client-side checks.
+    # Do this on the API server, not here! (Still, we need to handle the error message from
+    # the API server.)
 
     if data['action'] == 'add':
         model = TestModelCreate(data1=val1, data2=val2)
