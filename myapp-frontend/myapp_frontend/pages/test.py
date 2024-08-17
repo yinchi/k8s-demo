@@ -7,7 +7,7 @@ import dash
 import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
 import requests
-from dash import Input, Output, State, callback, dcc, html
+from dash import Input, Output, State, callback, clientside_callback, dcc, html
 from dash_compose import composition
 
 from myapp_frontend.module_meta import api_settings
@@ -23,25 +23,41 @@ colDefs = [
     },
     {
         'headerName': 'Field 1',
-        'field': 'data1'
+        'field': 'data1',
+        'minWidth': 150,
+        'flex': 1,
+        'wrapText': True,
+        'cellStyle': {'wordBreak': 'normal'},
+        'autoHeight': True
     },
     {
         'headerName': 'Field 2',
-        'field': 'data2'
+        'field': 'data2',
+        'minWidth': 150,
+        'flex': 2,
+        'wrapText': True,
+        'cellStyle': {'wordBreak': 'normal'},
+        'autoHeight': True
     },
     {
         'field': 'edit',
         'cellRenderer': 'DBC_Button',
         'cellRendererParams': {
             'color': 'primary'
-        }
+        },
+        'width': '106px',
+        'suppressSizeToFit': True,
+        'resizable': False
     },
     {
         'field': 'delete',
         'cellRenderer': 'DBC_Button',
         'cellRendererParams': {
             'color': 'danger'
-        }
+        },
+        'width': '124px',
+        'suppressSizeToFit': True,
+        'resizable': False
     }
 ]
 
@@ -64,13 +80,14 @@ def layout():
                         columnDefs=colDefs,
                         rowData=add_button_text(get_data()),
                         columnSize='autoSize',
-                        defaultColDef={'minWidth': 125},
+                        defaultColDef={'maxWidth': 300,
+                                       'suppressMovable': True},
                         dashGridOptions={'suppressCellFocus': True,
-                                         'suppressMovable': True,
                                          'enableCellTextSelection': True,
-                                         'ensureDomOrder': True,
-                                         'domLayout': 'print'},
-                        style={'height': 'auto'}
+                                         'ensureDomOrder': True},
+                        style={'minWidth': '580px',
+                               'maxWidth': '90%',
+                               'height': '300px'}
                     )
             with dbc.Row(class_name='m-0 p-0'):
                 with dbc.Col(class_name='m-0 p-0', width='auto'):
@@ -313,5 +330,17 @@ def submit_add_edit(_, data, val1, val2):
     )
 
     return {}, add_button_text(get_data())
+
+
+clientside_callback(
+    # Auto-size the columns of the AG Grid whenever the row data is updated
+    """function (u) {
+        dash_ag_grid.getApi("grid-test-models").autoSizeAllColumns();
+        return dash_clientside.no_update;
+    }""",
+    Output('grid-test-models', 'id'),
+    Input('grid-test-models', 'rowData'),
+    prevent_initial_call=True
+)
 
 # endregion
