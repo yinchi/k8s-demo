@@ -44,7 +44,8 @@ disable=
     too-many-instance-attributes,
     too-many-locals,
     broad-exception-caught,
-    bare-except
+    bare-except,
+    wrong-import-order  # let isort handle this
 
 
 [MISCELLANEOUS]
