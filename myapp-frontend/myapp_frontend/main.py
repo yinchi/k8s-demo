@@ -9,7 +9,7 @@ import dash_bootstrap_components as dbc
 from dash import Dash, html
 from dash_compose import composition
 
-from .module_meta import MODULES
+from .module_meta import MODULES, api_settings
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -125,4 +125,16 @@ if __name__ == '__main__':
         DEBUG = False
     else:
         DEBUG = True
+
+    if DEBUG:
+        print(f"""\
+
+
+--------------------------------------------
+
+Frontend launched: {datetime.now().isoformat()}
+API settings:
+    {dict(api_settings)}
+
+""")
     app.run(debug=DEBUG, host='0.0.0.0')

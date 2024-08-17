@@ -1,6 +1,5 @@
 """Metadata on the modules of the app."""
 
-import os
 from typing import Self
 
 import dash_bootstrap_components as dbc
@@ -32,18 +31,13 @@ class APISettings(BaseSettings):
 
     @model_validator(mode='after')
     def check_public_url(self) -> Self:
+        """If the public API URL is unset/None, set it to the same as the internal URL."""
         if self.public_url is None:
             self.public_url = self.url
         return self
 
 
 api_settings = APISettings()
-
-print()
-print('API SETTINGS:')
-print(api_settings)
-print()
-print()
 
 
 class ModuleMeta(SQLModel):
