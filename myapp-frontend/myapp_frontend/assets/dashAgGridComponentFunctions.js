@@ -12,7 +12,7 @@ dagcomponentfuncs.DBC_Button = function (props) {
         {
             onClick,
             color: props.color,
-            class_name: "my-1 p-1"
+            class_name: "my-1 py-1 px-2"
         },
         props.value
     );
