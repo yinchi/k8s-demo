@@ -35,4 +35,5 @@ COPY --from=builder /app/ /app
 COPY --exclude=*.venv* /myapp-frontend/ /app/myapp-frontend
 
 WORKDIR /app/myapp-frontend
-CMD python -m myapp_frontend.main
+# CMD python -m myapp_frontend.main
+CMD gunicorn -w 1 -b 0.0.0.0:8050 myapp_frontend.main:server

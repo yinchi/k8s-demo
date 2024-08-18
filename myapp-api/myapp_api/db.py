@@ -24,7 +24,7 @@ class PostgresSettings(BaseSettings):
     user: str
     password: SecretStr
     host: str = 'localhost'
-    port: int = Field(default=5432, ge=0, lt=2**16)
+    port_num: int = Field(default=5432, ge=0, lt=2**16)
     db_name: str = 'myapp'
 
     model_config = SettingsConfigDict(
@@ -42,12 +42,12 @@ settings = PostgresSettings()
 
 DATABASE_URL: PostgresDsn = (
     f'postgresql+asyncpg://{settings.user}:{settings.password.get_secret_value()}'
-    f'@{settings.host}:{settings.port}/{settings.db_name}'
+    f'@{settings.host}:{settings.port_num}/{settings.db_name}'
 )
 
 DATABASE_URL_DISPLAY: PostgresDsn = (
     f'postgresql+asyncpg://{settings.user}:{settings.password}'
-    f'@{settings.host}:{settings.port}/{settings.db_name}'
+    f'@{settings.host}:{settings.port_num}/{settings.db_name}'
 )
 
 engine = AsyncEngine(create_engine(DATABASE_URL, echo=True))

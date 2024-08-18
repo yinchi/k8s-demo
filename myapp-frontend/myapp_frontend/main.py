@@ -23,6 +23,7 @@ app = Dash(__name__,
            use_pages=True,
            suppress_callback_exceptions=True,
            external_stylesheets=[dbc.themes.FLATLY, DBC_CSS])
+server = app.server
 
 NAVBAR_MODULES = {
     module.short_title: module.href

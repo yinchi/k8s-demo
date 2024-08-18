@@ -13,3 +13,10 @@ kubectl create -f postgres-pv.yaml
 helm install postgres oci://registry-1.docker.io/bitnamicharts/postgresql \
   -n myapp --values values.yaml --wait --timeout 60s
 popd
+
+
+### API (Deployment) ###
+
+pushd myapp-k8s
+kubectl apply -f myapp-api.yaml
+popd
