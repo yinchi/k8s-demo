@@ -388,6 +388,28 @@ def submit_add_edit(_, data, val1, val2):
 
     return {}, add_button_text(get_data())
 
+
+@callback(
+    Output(STORE_CURRENT_ACTION_ID, 'data', allow_duplicate=True),
+    Output(GRID_ID, 'rowData', allow_duplicate=True),
+    Input(f'{MODAL_DELETE_BTN_PREFIX}delete', 'n_clicks'),
+    State(STORE_CURRENT_ACTION_ID, 'data'),
+    prevent_initial_call=True
+)
+def confirm_delete(_, data):
+    """Delete a row from the TestModel database table according to the current action,
+    stored in the `data` argument. When done, update `data` to the empty dict to
+    signal no current action."""
+
+    _id = data['rowData']['id']
+    response = requests.delete(
+        f'{api_settings.url}/test_module/test/{_id}',
+        timeout=30)
+    assert response.status_code == 200, (
+        f"Received non-200 status code: {response.status_code}"
+    )
+    return {}, add_button_text(get_data())
+
 # endregion
 
 

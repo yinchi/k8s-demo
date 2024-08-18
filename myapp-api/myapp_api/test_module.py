@@ -39,6 +39,9 @@ async def insert_test_model(_model: TestModelCreate,
         await session.commit()
         await session.refresh(model)
         return model
+    except HTTPException as e:
+        await session.rollback()
+        raise e
     except Exception as e:
         await session.rollback()
         raise HTTPException(500, str(e)) from e
@@ -60,14 +63,42 @@ async def update_test_model(obj_id: int,
                             update: TestModelUpdate,
                             session: AsyncSession = Depends(get_session)):
     """Find and update a TestModel by its ID. Returns the updated TestModel."""
-    model = await session.get(TestModel, obj_id)
-    if model is None:
-        raise HTTPException(404, f'No TestModel with ID {obj_id}.')
-    model.sqlmodel_update(update.model_dump(exclude_unset=True))
-    print('model updated locally')
-    session.add(model)
-    await session.commit()
-    print('commit')
-    await session.refresh(model)
-    print('refresh')
-    return model
+    try:
+        model = await session.get(TestModel, obj_id)
+        if model is None:
+            raise HTTPException(404, f'No TestModel with ID {obj_id}.')
+        model.sqlmodel_update(update.model_dump(exclude_unset=True))
+        print('model updated locally')
+        session.add(model)
+        await session.commit()
+        print('commit')
+        await session.refresh(model)
+        print('refresh')
+        return model
+    except HTTPException as e:
+        await session.rollback()
+        raise e
+    except Exception as e:
+        await session.rollback()
+        raise HTTPException(500, str(e)) from e
+
+
+@router.delete('/test/{obj_id}',
+               summary='Delete test model')
+async def update_test_model(obj_id: int,
+                            session: AsyncSession = Depends(get_session)):
+    """Find and **delete** a TestModel by its ID. Returns the deleted TestModel."""
+    try:
+        model = await session.get(TestModel, obj_id)
+        if model is None:
+            raise HTTPException(404, f'No TestModel with ID {obj_id}.')
+        await session.delete(model)
+        await session.commit()
+        print('delete-commit')
+        return model
+    except HTTPException as e:
+        await session.rollback()
+        raise e
+    except Exception as e:
+        await session.rollback()
+        raise HTTPException(500, str(e)) from e
