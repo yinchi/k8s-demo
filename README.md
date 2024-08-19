@@ -8,6 +8,7 @@ For convenience, we have created a `git root` alias:
 ```bash
 git config --global alias.root 'rev-parse --show-toplevel'
 ```
+Ensure that you are in the project root before continuing below.
 
 Ensure that `docker`, `kubectl`, `kind`, and `helm` are installed. For `docker`, follow the [apt install instructions](https://docs.docker.com/engine/install/ubuntu/). For the other packages:
 ```bash
@@ -17,16 +18,21 @@ sudo snap install helm --classic
 go install sigs.k8s.io/kind@v0.23.0
 ```
 
-Finally, enable our utility scripts:
+A set of shell scripts and aliases are provided in `scripts/` and `load_scripts.sh`. A utility script `prepend_path` is required; copy this to a directory on your `$PATH`, e.g. `$HOME/.local/bin`.
 ```bash
-cd `git root`
+cp copy_this_to_local_bin/prepend_path $HOME/.local/bin/prepend_path
+```
+
+Finally, enable and load our utility scripts:
+```bash
 chmod +x ./scripts/*.sh
+. load_scripts.sh
 ```
 
 We can read the documentation for each script using the `bashdoc.sh` script, which displays the block comment at the top of the specified `.sh` file.
 
 ```bash
-./scripts/bashdoc.sh ./scripts/bashdoc.sh
+./scripts/bashdoc init.sh
 ```
 
 ## Setup
@@ -100,7 +106,3 @@ To expose a Kubernetes service, we can run `kubectl port-forward`. Utility funct
 ## Port forwarding (Docker)
 
 For development, we may deploy containers on Docker without inserting them into the Kubernetes cluster. The Docker Compose file defines `host.docker.internal` so that Docker containers can communicate with the host machine and access any Kubernetes services that have been set up with `kubectl port-forward`.
-
-## Shell scripts
-
-A set of shell scripts and functions are provided in `scripts/` and `load_scripts.sh`. A utility script `prepend_path` is required; copy this to a directory on your `$PATH`, e.g. `$HOME/.local/bin`.

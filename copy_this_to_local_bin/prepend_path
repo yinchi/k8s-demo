@@ -36,6 +36,5 @@ fi
 # Call the function with the provided path
 prepend_path_fn "$1"
 
-# Optional: Print the new PATH for verification
-echo "New PATH: $PATH"
+echo "PATH=$PATH"
 

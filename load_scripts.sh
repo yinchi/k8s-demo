@@ -6,14 +6,8 @@
 #
 # Add the scripts directory to the system path and sets some environment variables.
 
-prepend_path `git root`/scripts
-
-# Get the github user/org from the remote git URL, e.g. 'yinchi' for
-# 'https://github.com/yinchi/...'. The matching repository URL prefix is 'ghcr.io/yinchi/...'.
-export GHCR_USER=$(git remote get-url origin | cut -d'/' -f4)
-
-echo "Set GHCR_USER to $GHCR_USER"
-echo "Set MYAPP to myapp"
+echo `prepend_path scripts/`
+export `prepend_path scripts/`
 
 alias popy="poetry run python"
 alias polint="poetry run pylint --rcfile=`git root`/.pylintrc"
