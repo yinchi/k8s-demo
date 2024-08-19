@@ -29,7 +29,7 @@ chmod +x ./scripts/*.sh
 . load_scripts.sh
 ```
 
-We can read the documentation for each script using the `bashdoc.sh` script, which displays the block comment at the top of the specified `.sh` file.
+We can read the documentation for each script using the `bashdoc` script, which displays the block comment at the top of the specified `.sh` file.
 
 ```bash
 ./scripts/bashdoc init.sh
