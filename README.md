@@ -33,7 +33,7 @@ We can read the documentation for each script using the `bashdoc.sh` script, whi
 
 Create the files and directories as described in the "**Setup**" sections of:
 
-- postgres/README.md
+- helm/postgres.md
 - myapp-api/README.md
 
 ## Running the cluster

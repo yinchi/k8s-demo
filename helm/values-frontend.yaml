@@ -1,0 +1,15 @@
+app:
+  namespace: myapp
+  name: frontend
+  container:
+    image: ghcr.io/yinchi/myapp-frontend:latest
+    port: 8050
+    env:
+      - name: api_url
+        value: "http://myapp-api:3000"
+      - name: api_public_url
+        value: "http://localhost:3000"
+service:
+  type: ClusterIP
+  protocol: TCP
+  port: 8080

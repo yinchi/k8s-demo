@@ -1,0 +1,13 @@
+app:
+  namespace: myapp
+  name: xxx
+  replicaCount: 1
+  container:
+    image: ghcr.io/yinchi/myapp-xxx:latest
+    port: 8000
+    env: []
+    secretenv: []
+service:
+  type: ClusterIP
+  protocol: TCP
+  port: 3000

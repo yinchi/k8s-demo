@@ -2,7 +2,7 @@
 
 ## Setup
 
-To start, create folder `mnt/` in the current directory, then create `passwords.secret.yaml` to store your login details:
+To start, create folder `mnt/` in the `postgres` directory, then create `passwords.secret.yaml` to store your login details:
 
 ```yaml
 apiVersion: v1

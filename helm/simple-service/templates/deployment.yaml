@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.app.namespace }}
+  name: {{ .Values.app.namespace }}-{{ .Values.app.name }}
+  labels:
+    app: {{ .Values.app.namespace }}-{{ .Values.app.name }}
+    app.kubernetes.io/name: {{ .Values.app.namespace }}-{{ .Values.app.name }}
+    app.kubernetes.io/version: {{ .Release.Name }}-{{ .Release.Revision }}
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.namespace }}-{{ .Values.app.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.namespace }}-{{ .Values.app.name }}
+    spec:
+      containers:
+      - image: {{ .Values.app.container.image }}
+        name: {{ .Values.app.namespace }}-{{ .Values.app.name }}
+        ports:
+        - containerPort: {{ .Values.app.container.port }}
+        env:
+          {{- range .Values.app.container.env}}
+          - name: {{ .name }}
+            value: {{ quote .value }}
+          {{- end}}
+          {{- range .Values.app.container.secretenv}}
+          - name: {{ .name }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .secretName }}
+                key: {{ .key }}
+          {{- end}}
