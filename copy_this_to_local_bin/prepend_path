@@ -2,7 +2,8 @@
 #
 # Prepend a path to $PATH, removing duplicates.
 #
-# Copy this file to a directory on your $PATH, e.g. $HOME/.local/bin
+# Copy this file to a directory on your $PATH, e.g. $HOME/.local/bin.
+# Call the script using `export $(prepend_path <newpath>)`.
 
 prepend_path_fn() {
     local new_path="$(readlink -f $1)"
