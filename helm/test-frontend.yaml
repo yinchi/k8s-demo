@@ -1,0 +1,18 @@
+app:
+  namespace: myapp
+  name: test-frontend
+  container:
+    image: ghcr.io/yinchi/myapp-test-frontend:latest
+    port: 8050
+    env:
+      - name: api_url
+        value: "http://myapp-test-api:3000"
+      - name: frontend_root
+        value: "/test-module/frontend/"
+service:
+  type: ClusterIP
+  protocol: TCP
+  port: 8081
+traefik:
+  path: "/test-module/frontend"
+  stripPrefix: false

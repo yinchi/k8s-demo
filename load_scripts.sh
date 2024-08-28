@@ -14,6 +14,6 @@ alias polint="poetry run pylint --rcfile=`git root`/.pylintrc"
 
 alias db_expose="screen -dmS myapp-postgres-portfwd kubectl port-forward -n myapp svc/postgres --address 0.0.0.0 5432:5432 &"
 
-alias api_expose="screen -dmS myapp-api-portfwd kubectl port-forward -n myapp svc/myapp-api --address 0.0.0.0 3000:3000"
+alias traefik_expose="screen -dmS traefik-dash-portfwd kubectl port-forward -n myapp $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name -n myapp) 9000:9000 &"
 
-alias frontend_expose="screen -dmS myapp-frontend-portfwd kubectl port-forward -n myapp svc/myapp-frontend --address 0.0.0.0 8080:8080"
+alias web_expose="screen -dmS traefik-dash-portfwd kubectl port-forward -n myapp $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name -n myapp) 8000:8000 &"

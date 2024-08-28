@@ -1,0 +1,13 @@
+app:
+  namespace: myapp
+  name: frontend-main
+  container:
+    image: ghcr.io/yinchi/myapp-frontend-main:latest
+    port: 8050
+service:
+  type: ClusterIP
+  protocol: TCP
+  port: 8080
+traefik:
+  path: "/"
+  stripPrefix: false

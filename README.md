@@ -40,7 +40,6 @@ We can read the documentation for each script using the `bashdoc` script, which 
 Create the files and directories as described in the "**Setup**" sections of:
 
 - helm/postgres.md
-- myapp-api/README.md
 
 ## Running the cluster
 
@@ -60,38 +59,17 @@ Next, initialise all our resources (secrets, services, persistent volumes etc.):
 
 Ensure that everything is running:
 ```bash
-kubectl get all,pv,pvc,secret -n myapp
+kubectl get pod -n myapp
 ```
 
 *Example output:*
 ```
-NAME                            READY   STATUS    RESTARTS   AGE
-pod/myapp-api-8bbdcf645-fnb4b   1/1     Running   0          7m30s
-pod/postgres-0                  1/1     Running   0          7m51s
-
-NAME                  TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
-service/myapp-api     ClusterIP   10.96.58.175    <none>        3000/TCP   4m10s
-service/postgres      ClusterIP   10.96.140.145   <none>        5432/TCP   7m51s
-service/postgres-hl   ClusterIP   None            <none>        5432/TCP   7m51s
-
-NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/myapp-api   1/1     1            1           7m30s
-
-NAME                                  DESIRED   CURRENT   READY   AGE
-replicaset.apps/myapp-api-8bbdcf645   1         1         1       7m30s
-
-NAME                        READY   AGE
-statefulset.apps/postgres   1/1     7m51s
-
-NAME                           CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
-persistentvolume/postgres-pv   10Gi       RWO            Retain           Bound    myapp/postgres-pvc                  <unset>                          7m54s
-
-NAME                                 STATUS   VOLUME        CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
-persistentvolumeclaim/postgres-pvc   Bound    postgres-pv   10Gi       RWO                           <unset>                 7m54s
-
-NAME                                    TYPE                 DATA   AGE
-secret/postgres-passwords               Opaque               2      7m54s
-secret/sh.helm.release.v1.postgres.v1   helm.sh/release.v1   1      7m51s
+NAME                                   READY   STATUS    RESTARTS   AGE
+myapp-frontend-main-77548d65d7-gmr6r   1/1     Running   0          8m55s
+myapp-test-api-64fc89c874-5bvgl        1/1     Running   0          9m6s
+myapp-test-frontend-5b8cc77755-7t4vp   1/1     Running   0          8m55s
+postgres-0                             1/1     Running   0          9m21s
+traefik-5bff54c84c-7ckh6               1/1     Running   0          9m6s
 ```
 
 ### Tear-down
