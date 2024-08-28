@@ -1,20 +1,32 @@
 """FastAPI backend server for the Test module."""
 
 from collections.abc import Sequence
+from typing import Literal
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
-from myapp_models.test_model import TestModel, TestModelCreate, TestModelUpdate
-
 from .db import get_session
+from .models import TestModel, TestModelCreate, TestModelUpdate
 
-router = APIRouter()
+app = FastAPI(title='Test Module API')
 
 
-@router.get('/test',
-            summary='Get test models')
+class PingResponse(BaseModel):
+    response: Literal['pong'] = 'pong'
+
+
+@app.get('/ping',
+         summary='Ping')
+async def ping() -> PingResponse:
+    """Ping the API server."""
+    return PingResponse()
+
+
+@app.get('/',
+         summary='Get test models')
 async def get_test_models(session: AsyncSession = Depends(get_session)) -> Sequence[TestModel]:
     """Get the list of TestModel instances in the database."""
     models = await session.execute(select(TestModel).order_by(TestModel.id))
@@ -22,8 +34,8 @@ async def get_test_models(session: AsyncSession = Depends(get_session)) -> Seque
     return models
 
 
-@router.post('/test',
-             summary='Create test model')
+@app.post('/',
+          summary='Create test model')
 async def insert_test_model(_model: TestModelCreate,
                             session: AsyncSession = Depends(get_session)) -> TestModel:
     """Insert a new TestModel instance into the database. Returns the inserted TestModel."""
@@ -47,8 +59,8 @@ async def insert_test_model(_model: TestModelCreate,
         raise HTTPException(500, str(e)) from e
 
 
-@router.get('/test/{obj_id}',
-            summary='Get test model by ID')
+@app.get('/{obj_id}',
+         summary='Get test model by ID')
 async def get_test_model(obj_id: int, session: AsyncSession = Depends(get_session)):
     """Get the a TestModel from the database by its ID."""
     model = await session.get(TestModel, obj_id)
@@ -57,8 +69,8 @@ async def get_test_model(obj_id: int, session: AsyncSession = Depends(get_sessio
     return model
 
 
-@router.patch('/test/{obj_id}',
-              summary='Update test model')
+@app.patch('/{obj_id}',
+           summary='Update test model')
 async def update_test_model(obj_id: int,
                             update: TestModelUpdate,
                             session: AsyncSession = Depends(get_session)):
@@ -83,8 +95,8 @@ async def update_test_model(obj_id: int,
         raise HTTPException(500, str(e)) from e
 
 
-@router.delete('/test/{obj_id}',
-               summary='Delete test model')
+@app.delete('/{obj_id}',
+            summary='Delete test model')
 async def update_test_model(obj_id: int,
                             session: AsyncSession = Depends(get_session)):
     """Find and **delete** a TestModel by its ID. Returns the deleted TestModel."""

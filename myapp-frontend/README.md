@@ -1,1 +1,0 @@
-# Dash frontend for MyApp

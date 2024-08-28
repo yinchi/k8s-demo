@@ -1,19 +1,23 @@
-"""Dash page for the Test module of the app."""
+"""Frontend for the Test module."""
 
-import re
-from typing import Optional
+import os
+from datetime import datetime
+from typing import TYPE_CHECKING, Self
 
-import dash
 import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
+import dotenv
 import requests
-from dash import Input, Output, State, callback, clientside_callback, dcc, html
+from dash import Dash, Input, Output, State, callback, clientside_callback, dcc, html
 from dash_compose import composition
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from myapp_frontend.module_meta import api_settings
-from myapp_models.test_model import TestModelCreate, TestModelUpdate
+from test_module.models import TestModelCreate, TestModelUpdate
+from frontend_common.dash_layout import layout
 
-dash.register_page(__name__, path='/test')
+
+DBC_CSS = 'https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css'
 
 colDefs = [
     {
@@ -61,6 +65,33 @@ colDefs = [
     }
 ]
 
+
+class APISettings(BaseSettings):
+    """Configuration settings for the PostgreSQL connection.
+
+    Settings are read from the environment, then from the .env files, then from
+    the default values (if any).
+    """
+    api_url: str
+    frontend_root: str = Field(default='/')
+
+    model_config = SettingsConfigDict(
+        str_min_length=1,
+        env_file=[f for f in [
+            dotenv.find_dotenv('.env')
+        ] if f != ''],  # find_dotenv returns '' if file not found
+        case_sensitive=False,
+        extra='ignore'
+    )
+
+
+settings = APISettings()
+print()
+print()
+print(f'API settings: {settings}')
+print()
+print()
+
 # region layout
 
 GRID_ID = 'grid-test-models'
@@ -79,7 +110,7 @@ MODAL_DELETE_BTN_PREFIX = 'btn-test-del-'
 
 
 @composition
-def layout():
+def page_content():
     """Layout for the page."""
     with dbc.Container(
         fluid=True,
@@ -188,7 +219,7 @@ def modal_add_edit(_id: str,
                                  color='primary')
                 yield dbc.Button('Cancel',
                                  id=f'{btn_prefix}cancel',
-                                 color='secondary')
+                                 color='warning')
 
     return ret
 
@@ -222,14 +253,14 @@ Delete row?
                              color='danger')
             yield dbc.Button('Cancel',
                              id=f'{btn_prefix}cancel',
-                             color='secondary')
+                             color='warning')
 
     return ret
 
 
 def get_data():
     """Grab all the TestModel data from the database."""
-    response = requests.get(f'{api_settings.url}/test_module/test', timeout=30)
+    response = requests.get(settings.api_url, timeout=30)
     assert response.status_code == 200, (
         f"Received non-200 status code: {response.status_code}"
     )
@@ -240,10 +271,22 @@ def add_button_text(grid_data: list[dict]):
     """Add 'edit' and 'delete' fields to the grid data."""
     return [{**d, **{'edit': 'Edit 🖉', 'delete': 'Delete 🗑'}} for d in grid_data]
 
+# endregion
+
+
+# region app
+
+app = Dash(__name__,
+           url_base_pathname=settings.frontend_root,
+           suppress_callback_exceptions=True,
+           external_stylesheets=[dbc.themes.FLATLY, DBC_CSS])
+server = app.server
+
+# make app.layout a function to force database reload on page refresh
+app.layout = lambda: layout(page_content())
 
 # endregion
 
-############################
 
 # region callbacks
 
@@ -368,14 +411,14 @@ def submit_add_edit(_, data, val1, val2):
     if data['action'] == 'add':
         model = TestModelCreate(data1=val1, data2=val2)
         response = requests.post(
-            f'{api_settings.url}/test_module/test',
+            f'{settings.api_url}',
             json=model.model_dump(),
             timeout=30)
     elif data['action'] == 'edit':
         _id = data['rowData']['id']
         model = TestModelUpdate(data1=val1, data2=val2)
         response = requests.patch(
-            f'{api_settings.url}/test_module/test/{_id}',
+            f'{settings.api_url}/{_id}',
             json=model.model_dump(),
             timeout=30)
     else:
@@ -403,7 +446,7 @@ def confirm_delete(_, data):
 
     _id = data['rowData']['id']
     response = requests.delete(
-        f'{api_settings.url}/test_module/test/{_id}',
+        f'{settings.api_url}/{_id}',
         timeout=30)
     assert response.status_code == 200, (
         f"Received non-200 status code: {response.status_code}"
@@ -470,5 +513,29 @@ clientside_callback(
     Input(GRID_ID, 'rowData'),
     prevent_initial_call=True
 )
+
+# endregion
+
+
+# region main
+
+
+if __name__ == '__main__':
+    DEBUG = os.environ.get('DEBUG_DASH', True)
+    if (DEBUG is None or DEBUG == 0
+            or (isinstance(DEBUG, str) and DEBUG.lower() in ['0', 'false', 'no'])):
+        DEBUG = False
+    else:
+        DEBUG = True
+
+    if DEBUG:
+        print(f"""\
+
+
+--------------------------------------------
+
+Frontend launched: {datetime.now().isoformat()}
+""")
+    app.run(debug=DEBUG, host='0.0.0.0')
 
 # endregion

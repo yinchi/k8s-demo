@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1.7-labs
 
 # CONTEXT: ..
-
 FROM python:3.12-slim AS builder
 RUN pip install poetry
 
@@ -13,27 +12,26 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get -y dist-upgrade && apt-get -y install gcc
 
-RUN mkdir -p /app/myapp-models /app/myapp-frontend
+COPY /frontend-common /app/frontend-common
 
-COPY /myapp-models /app/myapp-models
-
-COPY /myapp-frontend/pyproject.toml /myapp-frontend/README.md /app/myapp-frontend/
-RUN cd /app/myapp-frontend && poetry install --no-interaction --no-ansi --no-root --without dev
+COPY /frontend-main/pyproject.toml /frontend-main/README.md /app/frontend-main/
+RUN cd /app/frontend-main && poetry install --no-interaction --no-ansi --no-root --without dev
 
 ###
 
 FROM python:3.12-slim AS runtime
 
-LABEL org.opencontainers.image.title="My App: REST API"
+LABEL org.opencontainers.image.title="My App: Frontend main page"
 LABEL org.opencontainers.image.source https://github.com/yinchi/k8s-db-test
 LABEL org.opencontainers.image.authors "Yin-Chi Chan <ycc39@cam.ac.uk>"
 
-ENV PATH="/app/myapp-frontend/.venv/bin:$PATH"
+ENV PATH="/app/frontend-main/.venv/bin:$PATH"
 ENV PYTHONUNBUFFERED=1
 
-COPY --from=builder /app/ /app
-COPY --exclude=*.venv* /myapp-frontend/ /app/myapp-frontend
+EXPOSE 8050
 
-WORKDIR /app/myapp-frontend
-# CMD python -m myapp_frontend.main
-CMD gunicorn -w 1 -b 0.0.0.0:8050 myapp_frontend.main:server
+COPY --from=builder /app/ /app
+COPY --exclude=*.venv* /frontend-main /app/frontend-main
+
+WORKDIR /app/frontend-main/frontend_main
+CMD gunicorn -w 1 -b 0.0.0.0:8050 main:server

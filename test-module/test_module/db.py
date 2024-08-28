@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel, create_engine
 
-from myapp_models.test_model import TestModel  # pylint: disable=unused-import
+from .models import TestModel  # pylint: disable=unused-import
 
 
 class PostgresSettings(BaseSettings):
@@ -21,7 +21,7 @@ class PostgresSettings(BaseSettings):
     """
     # Field value priority:
     # https://docs.pydantic.dev/latest/concepts/pydantic_settings/#field-value-priorit
-    user: str
+    user: str = 'myapp'
     password: SecretStr
     host: str = 'localhost'
     port_num: int = Field(default=5432, ge=0, lt=2**16)
@@ -63,7 +63,7 @@ async def init_db(clear: bool = False):
 
     print('------------------------------')
     print('DATABASE URL:', DATABASE_URL_DISPLAY)
-    print('INITIALISING DB SCHEMA')
+    print('INITIALISING SQLMODEL METADATA')
     print('------------------------------')
     print()
 
@@ -71,9 +71,9 @@ async def init_db(clear: bool = False):
         if clear:
             await conn.run_sync(SQLModel.metadata.drop_all)
             print()
-            print('------------------------------')
-            print(' DROPPED ALL EXISTING TABLES  ')
-            print('------------------------------')
+            print('---------------------------------------')
+            print(' DROPPED EXISTING TABLES IN METADATA  ')
+            print('---------------------------------------')
             print()
         await conn.run_sync(SQLModel.metadata.create_all)
     print()

@@ -1,29 +1,76 @@
 services:
-  api:
-    image: "ghcr.io/yinchi/myapp-api:latest"
+
+  # FRONTEND -- MAIN PAGE
+  frontend-main:
+    image: "ghcr.io/yinchi/myapp-frontend-main:latest"
     build:
       context: .
-      dockerfile: ./myapp-api/Dockerfile
+      dockerfile: ./frontend-main/Dockerfile
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend-main.rule=PathPrefix(`/`)"
+    environment: # any variables set here override the env_file values
+      - "DEBUG_DASH=0"
+    stop_grace_period: 3s
+
+  # TEST MODULE -- API
+  test-api:
+    image: "ghcr.io/yinchi/myapp-test-api:latest"
+    build:
+      context: .
+      dockerfile: ./test-module/api.Dockerfile
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.test-api.rule=PathPrefix(`/test-module/api`)"
+      - "traefik.http.routers.test-api.middlewares=strip-test-api"
+      - "traefik.http.middlewares.strip-test-api.stripprefix.prefixes=/test-module/api"
     extra_hosts:
       - host.docker.internal=host-gateway
-    ports:
-      - "127.0.0.1:3000:8000"
     env_file:
-      - ./myapp-api/.env
-      - ./myapp-api/.env.secret
+      - ./test-module/.env
+      - ./test-module/.env.secret
     environment: # any variables set here override the env_file values
       - "postgres_host=host.docker.internal"
-  frontend:
-    image: "ghcr.io/yinchi/myapp-frontend:latest"
+    stop_grace_period: 3s
+    healthcheck:
+      test: curl --fail -s http://localhost:8000/ping || exit 1
+      interval: 5s
+      retries: 3
+      start_period: 20s
+      timeout: 5s
+
+  # TEST MODULE -- FRONTEND
+  test-frontend:
+    image: "ghcr.io/yinchi/myapp-test-frontend:latest"
     build:
       context: .
-      dockerfile: ./myapp-frontend/Dockerfile
-    ports:
-      - "127.0.0.1:80:8050"
+      dockerfile: ./test-module/frontend.Dockerfile
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.test-frontend.rule=PathPrefix(`/test-module/frontend`)"
+      # - "traefik.http.routers.test-frontend.middlewares=strip-test-frontend"
+      # - "traefik.http.middlewares.strip-test-frontend.stripprefix.prefixes=/test-module/frontend"
     env_file:
-      - ./myapp-frontend/.env
+      - ./test-module/.env
     environment: # any variables set here override the env_file values
-      - "api_url=http://api:8000"
+      - "api_url=http://test-api:8000"
+      - "frontend_root=/test-module/frontend/"  # must end in slash
       - "DEBUG_DASH=0"
     depends_on:
-      - api
+      test-api:
+        condition: service_healthy
+    stop_grace_period: 3s
+  
+  # TRAEFIK
+  traefik:
+    image: traefik:v3.1
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "80:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+    stop_grace_period: 3s

@@ -1,1 +1,0 @@
-# SQLModel classes for the demo app
