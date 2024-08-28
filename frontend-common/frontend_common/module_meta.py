@@ -43,6 +43,12 @@ MODULES = [
 
 EXTRA_LINKS = [
     LinkMeta(
+        title='GitHub repo',
+        short_title='GitHub',
+        description='The GitHub repository for this app.',
+        href='https://github.com/yinchi/k8s-db-test',
+    ),
+    LinkMeta(
         title='Developer documentation',
         short_title='Dev docs',
         description='Documentation for developers.',

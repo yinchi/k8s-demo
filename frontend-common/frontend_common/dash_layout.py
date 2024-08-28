@@ -53,7 +53,7 @@ def navbar(title: str = 'Demo App',
                           fluid=True, fixed='top', class_name='mx-0 px-0', **kwargs) as ret:
         yield modules_dropdown(modules)
         for link in filter(lambda l: l.active, ext_links):
-            yield dbc.NavLink(link.title, href=link.href, target='_blank', external_link=True)
+            yield dbc.NavLink(link.short_title, href=link.href, target='_blank', external_link=True)
 
     return ret
 
@@ -63,7 +63,8 @@ def modules_dropdown(modules: list['ModuleMeta']):
     """Dropdown menu showing the modules of the app."""
     with dbc.DropdownMenu(nav=True, in_navbar=True, label='Modules') as ret:
         for module in filter(lambda m: m.active, modules):
-            yield dbc.DropdownMenuItem(module.title, href=module.href_frontend, external_link=True)
+            yield dbc.DropdownMenuItem(module.short_title,
+                                       href=module.href_frontend, external_link=True)
 
     return ret
 
