@@ -7,3 +7,7 @@ mnt/
 *pycache*/
 poetry.lock
 dist/
+
+# docs in seperate branch
+docs/
+docs-files/
