@@ -1,13 +1,33 @@
 app:
+  # app.namespace is the namespace of our app
   namespace: myapp
+  # app.name is the name of the current chart
   name: xxx
+  # app.replicaCount is the number of pods to launch for the chart's Deployment.
   replicaCount: 1
   container:
+    # app.container.image is the Docker image tag to use for the pods in the Deployment.
     image: ghcr.io/yinchi/myapp-xxx:latest
+    # app.container.port is the port number to expose for the Deployment's containers.
     port: 8000
+    # app.container.env is a list of environment variables for the containers, as (name,value)
+    # tuples.
     env: []
+    # app.container.secretenv is a list of environment variables for the containers, as (name,
+    # secretname,key) tuples. The value of the environment variable is taken from the Secret
+    # object with the specified name, using the specified key.
     secretenv: []
 service:
+  # service.type is the Service type, one of "ClusterIP" (default), "NodePort", "LoadBalancer",
+  # or "ExternalName".
   type: ClusterIP
+  # service.protocol is the protocol used by the Service, one of TCP (default), UDP, or SCTP.
   protocol: TCP
+  # service.port is the port number to expose the service on.
   port: 3000
+traefik:
+  # traefik.stripPrefix is a boolean specifying whether the path prefix in traefik.path should be
+  # stripped when forwarding requests to the Service.
+  stripPrefix: false
+  # traefik.path is the path prefix to match when forwarding requests to the Service.
+  path: "/xxx"
