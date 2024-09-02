@@ -52,7 +52,6 @@ EXTRA_LINKS = [
         title='Developer documentation',
         short_title='Dev docs',
         description='Documentation for developers.',
-        href='/dev-docs',
-        active=False
+        href='https://yinchi.github.io/k8s-db-test/',
     ),
 ]
