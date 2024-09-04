@@ -2,7 +2,7 @@
 #
 # Create a namespace for the app and install all associated resources.
 
-set -ex
+# set -ex
 
 # kind create cluster --config db.yaml
 kubectl create ns myapp
@@ -30,7 +30,7 @@ helm install frontend-main ./simple-service -n myapp --values frontend-main.yaml
 helm install test-frontend ./simple-service -n myapp --values test-frontend.yaml
 popd
 
-set +ex
+# set +ex
 
 . load_scripts.sh
 db_expose

@@ -4,14 +4,22 @@ from collections.abc import Sequence
 from typing import Literal
 
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.concurrency import asynccontextmanager
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
-from .db import get_session
+from .db import get_session, init_db
 from .models import TestModel, TestModelCreate, TestModelUpdate
 
-app = FastAPI(title='Test Module API')
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await init_db()
+    yield
+
+
+app = FastAPI(title='Test Module API', lifespan=lifespan)
 
 
 class PingResponse(BaseModel):

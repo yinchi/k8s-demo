@@ -91,9 +91,3 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session() as session:
         session: AsyncSession
         yield session
-
-if __name__ == '__main__':
-    print(settings.model_dump())
-    print()
-    CLEAR_DB = 'clear' in sys.argv
-    asyncio.run(init_db(clear=CLEAR_DB))
