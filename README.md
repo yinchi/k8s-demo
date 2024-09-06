@@ -10,6 +10,16 @@ git config --global alias.root 'rev-parse --show-toplevel'
 ```
 Ensure that you are in the project root before continuing below.
 
+### Database mounts
+
+Create a mount point for each database server in our app; currently, this is just the `postgres0` database. From the project root:
+
+```bash
+mkdir -p mnt/postgres0
+```
+
+### Software packages
+
 Ensure that `docker`, `kubectl`, `kind`, `helm`, and `screen` are installed. For `docker`, follow the [apt install instructions](https://docs.docker.com/engine/install/ubuntu/). For the other packages:
 ```bash
 sudo snap install kubectl --classic
@@ -18,6 +28,8 @@ sudo snap install helm --classic
 go install sigs.k8s.io/kind@v0.23.0
 sudo apt install screen
 ```
+
+### Scripts
 
 A set of shell scripts and aliases are provided in `scripts/` and `load_scripts.sh`. A utility script `prepend_path` is required; copy this to a directory on your `$PATH`, e.g. `$HOME/.local/bin`.
 ```bash
