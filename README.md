@@ -10,12 +10,13 @@ git config --global alias.root 'rev-parse --show-toplevel'
 ```
 Ensure that you are in the project root before continuing below.
 
-Ensure that `docker`, `kubectl`, `kind`, and `helm` are installed. For `docker`, follow the [apt install instructions](https://docs.docker.com/engine/install/ubuntu/). For the other packages:
+Ensure that `docker`, `kubectl`, `kind`, `helm`, and `screen` are installed. For `docker`, follow the [apt install instructions](https://docs.docker.com/engine/install/ubuntu/). For the other packages:
 ```bash
 sudo snap install kubectl --classic
 sudo snap install go --classic
 sudo snap install helm --classic
 go install sigs.k8s.io/kind@v0.23.0
+sudo apt install screen
 ```
 
 A set of shell scripts and aliases are provided in `scripts/` and `load_scripts.sh`. A utility script `prepend_path` is required; copy this to a directory on your `$PATH`, e.g. `$HOME/.local/bin`.
@@ -35,11 +36,14 @@ We can read the documentation for each script using the `bashdoc` script, which 
 ./scripts/bashdoc init.sh
 ```
 
-## Setup
+## Secrets
 
-Create the files and directories as described in the "**Setup**" sections of:
+This repo contains a number of example secret files. Locate them using:
+```bash
+find . -path './mnt/*' -prune -o -name '*.example*' -print
+```
 
-- helm/postgres.md
+Copy these files, removing ".example" from the filenames, and edit as desired.
 
 ## Running the cluster
 
@@ -47,9 +51,9 @@ All Kubernetes resources are associated with the `myapp` namespace.
 
 ### Initialisation
 
-Use kind to start a cluster.  The file `config.yaml` is used to set up our file mounts (e.g. for databases).
+Use kind to start a cluster.  The file `kind.yaml` is used to set up our file mounts (e.g. for databases).
 ```bash
-kind create cluster --config config.yaml
+kind create cluster --config kind.yaml
 ```
 
 Next, initialise all our resources (secrets, services, persistent volumes etc.):
@@ -65,11 +69,11 @@ kubectl get pod -n myapp
 *Example output:*
 ```
 NAME                                   READY   STATUS    RESTARTS   AGE
-myapp-frontend-main-77548d65d7-gmr6r   1/1     Running   0          8m55s
-myapp-test-api-64fc89c874-5bvgl        1/1     Running   0          9m6s
-myapp-test-frontend-5b8cc77755-7t4vp   1/1     Running   0          8m55s
-postgres-0                             1/1     Running   0          9m21s
-traefik-5bff54c84c-7ckh6               1/1     Running   0          9m6s
+myapp-frontend-main-77548d65d7-dmmkc   1/1     Running   0          11m
+myapp-test-api-76b9486764-5rgp7        1/1     Running   0          12m
+myapp-test-frontend-5b6b74f48d-whldq   1/1     Running   0          11m
+postgres0-0                            1/1     Running   0          12m
+traefik-5f9ddf59c-krgvf                1/1     Running   0          12m
 ```
 
 ### Tear-down
@@ -79,7 +83,7 @@ traefik-5bff54c84c-7ckh6               1/1     Running   0          9m6s
 
 ## Port forwarding (Kubernetes)
 
-To expose a Kubernetes service, we can run `kubectl port-forward`. Utility functions for doing so are included in `load_scripts.sh`, i.e. `xxx_expose()`.
+To expose a Kubernetes service, we can run `kubectl port-forward`. Utility functions for doing so are included in `load_scripts.sh`, i.e. `xxx_expose()`.  The `init.sh` script forwards the necessary ports automatically, using `screen` to provide persistence.
 
 ## Port forwarding (Docker)
 
