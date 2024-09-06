@@ -48,13 +48,7 @@ async def insert_test_model(_model: TestModelCreate,
                             session: AsyncSession = Depends(get_session)) -> TestModel:
     """Insert a new TestModel instance into the database. Returns the inserted TestModel."""
     try:
-        print()
-        print(_model.model_dump_json())
-
-        print(TestModel.model_fields)
         model = TestModel.model_validate_json(_model.model_dump_json())
-        print(model.model_dump_json())
-        print()
         session.add(model)
         await session.commit()
         await session.refresh(model)
@@ -88,12 +82,9 @@ async def update_test_model(obj_id: int,
         if model is None:
             raise HTTPException(404, f'No TestModel with ID {obj_id}.')
         model.sqlmodel_update(update.model_dump(exclude_unset=True))
-        print('model updated locally')
         session.add(model)
         await session.commit()
-        print('commit')
         await session.refresh(model)
-        print('refresh')
         return model
     except HTTPException as e:
         await session.rollback()
@@ -114,7 +105,6 @@ async def update_test_model(obj_id: int,
             raise HTTPException(404, f'No TestModel with ID {obj_id}.')
         await session.delete(model)
         await session.commit()
-        print('delete-commit')
         return model
     except HTTPException as e:
         await session.rollback()
