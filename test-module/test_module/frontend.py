@@ -2,7 +2,6 @@
 
 import os
 from datetime import datetime
-from typing import TYPE_CHECKING, Self
 
 import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
@@ -13,8 +12,8 @@ from dash_compose import composition
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from test_module.models import TestModelCreate, TestModelUpdate
 from frontend_common.dash_layout import layout
+from test_module.models import TestModelCreate, TestModelUpdate
 
 
 DBC_CSS = 'https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css'

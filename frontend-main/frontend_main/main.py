@@ -2,7 +2,6 @@
 
 import os
 from datetime import datetime
-from typing import TYPE_CHECKING
 
 import dash_bootstrap_components as dbc
 from dash import Dash, html
@@ -46,8 +45,6 @@ def page_content():
 @composition
 def card(data: ModuleMeta | LinkMeta):
     """Card layout for the Dash home page."""
-
-    color = 'primary' if data.active else 'secondary'
 
     with dbc.Col(width='auto', style={'width': '20rem'},) as ret:
         with dbc.Card(class_name='m-0 p-0 h-100 w-100 border-0',

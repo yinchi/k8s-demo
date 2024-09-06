@@ -1,6 +1,4 @@
 """Database configuration for the MyApp application."""
-import asyncio
-import sys
 from collections.abc import AsyncGenerator
 
 import dotenv

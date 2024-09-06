@@ -4,9 +4,9 @@
         "editor.wordWrapColumn": 100
     },
     "python.analysis.extraPaths": [
-        "myapp-api/myapp_api",
-        "myapp-frontend/myapp_frontend",
-        "myapp-models/myapp_models"
+        "test-module/test_module",
+        "frontend-main/frontend_main",
+        "frontend-common/frontend_common"
     ],
     "pylint.importStrategy": "fromEnvironment",
     "isort.args": [

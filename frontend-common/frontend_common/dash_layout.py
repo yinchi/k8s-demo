@@ -1,11 +1,10 @@
 """Common frontend components for for MyApp."""
 
-import os
 from datetime import datetime
 from typing import TYPE_CHECKING
 
 import dash_bootstrap_components as dbc
-from dash import Dash, html
+from dash import html
 from dash_compose import composition
 
 from .module_meta import EXTRA_LINKS, MODULES

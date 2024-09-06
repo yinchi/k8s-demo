@@ -25,7 +25,6 @@ build-backend = "poetry.core.masonry.api"
 [tool.isort]
 line_length = 100
 color_output = true
-known_first_party = ["myapp_models"]
 
 [tool.autopep8]
 max_line_length = 100

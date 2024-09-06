@@ -14,7 +14,8 @@ from .models import TestModel, TestModelCreate, TestModelUpdate
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_: FastAPI):
+    """Lifespan function of the FastAPI app. Initialises the database upon startup."""
     await init_db()
     yield
 
@@ -23,6 +24,7 @@ app = FastAPI(title='Test Module API', lifespan=lifespan)
 
 
 class PingResponse(BaseModel):
+    """Pydantic model for a simple ping response."""
     response: Literal['pong'] = 'pong'
 
 
@@ -96,7 +98,7 @@ async def update_test_model(obj_id: int,
 
 @app.delete('/{obj_id}',
             summary='Delete test model')
-async def update_test_model(obj_id: int,
+async def delete_test_model(obj_id: int,
                             session: AsyncSession = Depends(get_session)):
     """Find and **delete** a TestModel by its ID. Returns the deleted TestModel."""
     try:
