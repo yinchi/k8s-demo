@@ -1,0 +1,20 @@
+nameOverride: "postgres0"
+fullnameOverride: "postgres0"
+
+global:
+  postgresql:
+   auth:
+      existingSecret: "postgres0-passwords"
+      username: "myapp"
+      database: "myapp"
+      secretKeys:
+        adminPasswordKey: "admin_password"
+        userPasswordKey: "user_password"
+        replicationPasswordKey: "user_password"
+
+primary:
+  persistence:
+    existingClaim: "postgres0-pvc"
+
+volumePermissions:
+  enabled: true

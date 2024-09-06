@@ -1,12 +1,11 @@
 app:
-  namespace: myapp
   name: test-api
   container:
     image: ghcr.io/yinchi/myapp-test-api:latest
     port: 8000
     env:
       - name: postgres_host
-        value: "postgres"
+        value: "postgres0"
       - name: postgres_port_num
         value: "5432"
       - name: postgres_db_name
@@ -15,8 +14,8 @@ app:
         value: myapp
     secretenv:
       - name: postgres_password
-        secretName: postgres-passwords
-        key: password
+        secretName: postgres0-passwords
+        key: user_password
 service:
   type: ClusterIP
   protocol: TCP

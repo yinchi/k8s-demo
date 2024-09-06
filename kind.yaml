@@ -1,0 +1,8 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  extraMounts:
+  # Add a mount for every persistent volume required
+  - hostPath: /home/yinchi/k8s-db-test/mnt/postgres0
+    containerPath: /myapp/postgres0

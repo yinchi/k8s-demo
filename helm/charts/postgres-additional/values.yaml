@@ -1,0 +1,10 @@
+namespace: "myapp"
+
+dbSize: 10Gi
+dbHostPath: "/myapp/postgres"
+pvcName: "postgres-pvc"
+pvName: "postgres-pv"
+
+secretName: "postgres-passwords"
+adminPassword: ""
+userPassword: ""

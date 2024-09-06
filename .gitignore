@@ -1,5 +1,6 @@
 mnt/
 *secret*
+!*secret.example*
 
 # Python
 .env/

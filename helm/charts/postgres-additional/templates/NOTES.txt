@@ -1,0 +1,8 @@
+Postgres Additional setup
+=========================
+
+Namespace: {{ .Values.namespace }}
+Persistent volume: {{ .Values.pvName }}
+Passwords secret: {{ .Values.secretName }}
+
+-------------------------

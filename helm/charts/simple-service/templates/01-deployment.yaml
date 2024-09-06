@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: {{ .Values.app.namespace }}
-  name: {{ .Values.app.namespace }}-{{ .Values.app.name }}
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Namespace }}-{{ .Values.app.name }}
   labels:
-    app: {{ .Values.app.namespace }}-{{ .Values.app.name }}
-    app.kubernetes.io/name: {{ .Values.app.namespace }}-{{ .Values.app.name }}
+    app: {{ .Release.Namespace }}-{{ .Values.app.name }}
+    app.kubernetes.io/name: {{ .Release.Namespace }}-{{ .Values.app.name }}
     app.kubernetes.io/version: {{ .Release.Name }}-{{ .Release.Revision }}
 spec:
   replicas: {{ .Values.app.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.app.namespace }}-{{ .Values.app.name }}
+      app: {{ .Release.Namespace }}-{{ .Values.app.name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.app.namespace }}-{{ .Values.app.name }}
+        app: {{ .Release.Namespace }}-{{ .Values.app.name }}
     spec:
       containers:
       - image: {{ .Values.app.container.image }}
-        name: {{ .Values.app.namespace }}-{{ .Values.app.name }}
+        name: {{ .Release.Namespace }}-{{ .Values.app.name }}
         ports:
         - containerPort: {{ .Values.app.container.port }}
         env:

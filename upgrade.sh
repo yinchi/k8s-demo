@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# Create a namespace for the app and install all associated resources.
+# Force Kubernetes to restart the app's services, which will always pull the latest version from
+# ghcr.io (assuming that the "latest" tag is used).
 
 set -ex
 

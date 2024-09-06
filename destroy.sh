@@ -10,4 +10,3 @@ ps a | grep "kubectl port-forward -n myapp" | grep -v grep | awk '{print $1}' | 
 helm list -q -n myapp | xargs -I {} helm uninstall {} -n myapp
 
 kubectl delete ns myapp
-kubectl delete pv postgres-pv

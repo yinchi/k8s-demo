@@ -1,5 +1,4 @@
 app:
-  namespace: myapp
   name: frontend-main
   container:
     image: ghcr.io/yinchi/myapp-frontend-main:latest

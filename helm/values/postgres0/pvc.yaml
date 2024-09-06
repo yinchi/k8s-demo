@@ -1,0 +1,4 @@
+dbSize: 10Gi
+dbHostPath: "/myapp/postgres0"
+pvcName: "postgres0-pvc"
+pvName: "postgres0-pv"

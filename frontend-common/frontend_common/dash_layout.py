@@ -45,8 +45,6 @@ def navbar(title: str = 'Demo App',
             A list of external links to be shown in the navbar.
     """
 
-    print(kwargs['style'])
-
     with dbc.NavbarSimple(id='navbar', brand=html.B(title), brand_href='/',
                           brand_external_link=True,
                           color='primary', dark=True,
@@ -75,7 +73,7 @@ def bottom_bar(**kwargs):
         © 2024-{current year} Yin-Chi Chan.
     If the current year is 2024, the dash and ending year are omitted.
     """
-    print(kwargs['style'])
+
     with dbc.Navbar(
         id='bottom-bar',
         color='primary',

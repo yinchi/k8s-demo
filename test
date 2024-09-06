@@ -1,0 +1,11 @@
+escape ^Pp
+startup_message off
+vbell off
+
+hardstatus on
+hardstatus alwayslastline
+hardstatus string "%{= KW} %H [%S] %{= Kw}|%{-} %-Lw%{= bW}%n%f %t%{-}%+Lw %=%C%a %Y-%M-%d"
+
+screen -t postgres 0 kubectl port-forward -n myapp svc/postgres0 --address 0.0.0.0 5432:5432
+screen -t traefik 1  kubectl port-forward -n myapp $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name -n myapp) 9000:9000
+screen -t web 2      kubectl port-forward -n myapp $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name -n myapp) 8000:8000

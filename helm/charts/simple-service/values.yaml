@@ -1,6 +1,4 @@
 app:
-  # app.namespace is the namespace of our app
-  namespace: myapp
   # app.name is the name of the current chart
   name: xxx
   # app.replicaCount is the number of pods to launch for the chart's Deployment.
