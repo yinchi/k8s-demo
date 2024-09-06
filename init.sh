@@ -52,6 +52,5 @@ helm upgrade -i test-frontend \
 popd
 
 . load_scripts.sh
-db_expose
 traefik_expose
 web_expose
