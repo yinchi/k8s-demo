@@ -2,7 +2,9 @@
 #
 # Create a namespace for the app and install all associated resources.
 
+pushd src
 docker compose build --push
+popd
 
 # kind create cluster --config kind.yaml
 kubectl create ns myapp
