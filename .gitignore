@@ -9,6 +9,4 @@ mnt/
 poetry.lock
 dist/
 
-# docs in seperate branch
-docs/
-docs-files/
+docs/_build/

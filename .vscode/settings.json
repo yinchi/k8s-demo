@@ -4,6 +4,8 @@
         "editor.wordWrapColumn": 100
     },
     "python.analysis.extraPaths": [
+        "docs",
+        "src/frontend-common/frontend_common",
         "test-module/test_module",
         "frontend-main/frontend_main",
         "frontend-common/frontend_common"
