@@ -1,7 +1,9 @@
 [tool.poetry]
 name = "frontend-main"
 version = "0.1.0"
-description = ""
+description = "Provides the root webpage in our K8s demo app."
+license = "MIT"
+repository = "https://github.com/yinchi/k8s-demo"
 authors = ["Yin-Chi Chan <ycc39@cam.ac.uk>"]
 readme = "README.md"
 

@@ -1,7 +1,9 @@
 [tool.poetry]
 name = "test-module"
 version = "0.1.0"
-description = "Test Module for MyApp"
+description = "Test module for our K8s demo app, including a REST API and a frontend page."
+license = "MIT"
+repository = "https://github.com/yinchi/k8s-demo"
 authors = ["Yin-Chi Chan <ycc39@cam.ac.uk>"]
 readme = "README.md"
 
