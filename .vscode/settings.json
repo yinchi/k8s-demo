@@ -4,10 +4,10 @@
         "editor.wordWrapColumn": 100
     },
     "python.analysis.extraPaths": [
+        "src/frontend-common/frontend_common",
         "src/test-module/test_module",
         "docs",
         "src/frontend-main/frontend_main",
-        "src/frontend-common/frontend_common",
         "src/frontend-common"
     ],
     "pylint.importStrategy": "fromEnvironment",

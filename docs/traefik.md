@@ -100,4 +100,4 @@ spec:
       - /test-module/api
 ```
 
-This instructs Traefik to forward requests containing the path prefix `/test-module/api` to the `myapp-test-api` service in the `myapp` namespace on port `3000`, after applying the `strip-prefix-test-api` Middleware, which strips the path prefix from the forwarded request.
+This instructs Traefik to forward requests containing the path prefix `/test-module/api` to the `myapp-test-api` service in the `myapp` namespace on port `3000`, after applying the `strip-prefix-test-api` Middleware, which strips the path prefix from the forwarded request.  Note that the `ExtensionRef` filter and `Middleware` are only included in our Helm chart if `traefik.stripPrefix` is set to `true` in our values file.
