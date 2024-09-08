@@ -12,8 +12,8 @@ export PATH=$(echo `prepend_path scripts/`)
 alias popy="poetry run python"
 alias polint="poetry run pylint --rcfile=`git root`/.pylintrc"
 
-alias traefik_expose="screen -dmS traefik-dash-portfwd kubectl port-forward -n myapp $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name -n myapp) 9000:9000 &"
-alias web_expose="screen -dmS myapp-portfwd kubectl port-forward -n myapp $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name -n myapp) 8000:8000 &"
+alias traefik_expose="screen -dmS traefik-dash-portfwd kubectl port-forward -n myapp deploy/traefik 9000:traefik &"
+alias web_expose="screen -dmS myapp-portfwd kubectl port-forward -n myapp svc/traefik 8000:web &"
 
 alias k="kubectl"
 alias pods="kubectl get pods -n myapp"
