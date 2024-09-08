@@ -17,6 +17,7 @@ node "kind Docker container" as kind {
  portin "          8000" as 8000
  portin "      9000" as 9000
  [Traefik]
+ [Main\nfrontend\npage] as podFE
  card "Module A" as svcA {
    [Frontend] as podA_Frontend
    [REST API] as podA_API
@@ -40,10 +41,11 @@ host9000 -- 9000 : "(kubectl port-forward)\n"
 8000 -- Traefik : " web"
 9000 -- Traefik : "dashboard"
 
-Traefik -- podA_Frontend : "HTTPRoute"
-Traefik -- podA_API : "HTTPRoute"
-Traefik -- podB : "HTTPRoute"
-Traefik -- podC : "HTTPRoute"
+Traefik -- podFE : "HTTPRoute\n/"
+Traefik -- podA_Frontend : "HTTPRoute\n/moduleA/frontend"
+Traefik -- podA_API : "HTTPRoute\n/moduleA/api"
+Traefik -- podB : "HTTPRoute\n/moduleB"
+Traefik -- podC : "HTTPRoute\n/moduleC"
 
 podA_Frontend . podA_API
 
@@ -58,3 +60,7 @@ podC .. db1
 The above figure shows the conceptual design of this demo app. For illustrative purposes, we show additional services and database servers in the figure (as opposed to one of each in the actual implemenation).  We implement a single-node Kubernetes cluster using `kind`, which runs within a Docker container on the host machine.
 
 The Kubernetes Services of the demo app are shown in grey, with the Traefik service providing access to the internal services of the app using `HTTPRoute` objects for configuration.  The internal services of the app can communicate with each other directly using the `kind` node's built-in DNS service.
+
+## Exposing the app
+
+Note that ports 8000 and 9000 are exposed to `localhost` only by default. For security reasons, do **not** expose the Traefik dashboard (port 9000) to the internet.  To expose the web app, we can use a public reverse proxy service such as `ngrok` (using [these instructions](https://ngrok.com/docs/getting-started/)). 
