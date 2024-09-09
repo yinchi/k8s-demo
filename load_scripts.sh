@@ -19,6 +19,12 @@ alias k="kubectl"
 alias pods="kubectl get pods -n myapp"
 alias logs="kubectl logs -n myapp"
 
+docs_local () {
+    pushd `git root`/docs
+    poetry run make clean html && poetry run sphinx-serve
+    popd
+}
+
 ns () {
     kubectl config set-context --current --namespace=$@
 }
