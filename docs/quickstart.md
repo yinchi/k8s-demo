@@ -54,6 +54,25 @@ You will probably also want to install the following **VSCode** extensions:
 
 Copy the files in `copy_this_to_local_bin` to a directory on your `$PATH`, e.g. `$HOME/.local/bin`. Currently, this is just `prepend_path`, which is used to add our `scripts` directory to the `$PATH` environment variable.
 
+## Secret files
+
+Find the files containing `secret.example` in their filenames and copy them.
+
+```console
+$ find . -path './mnt/*' -prune -o -name '*secret.example*' -print | \
+  xargs -I {} echo cp {} {} | sed 's/secret.example/secret/2' | tee >(bash)
+cp ./helm/values/postgres0/secret.example.yaml ./helm/values/postgres0/secret.yaml
+cp ./src/test-module/.env.secret.example ./src/test-module/.env.secret
+```
+
+```{note}
+The above script searches for files with `secret.example` in their paths, omitting `mnt/`, then uses `xargs` and `sed` to create a `bash` script to `cp` the relevant files.
+
+It is assumed that `secret.example` occurs only once in each file's path.
+```
+
+Edit the newly created files to set up the necessary secrets for the app.
+
 ## Launching the Kubernetes stack
 
 The file `kind.yaml` defines the configuration for our `kind` cluster, including extra mounts for database persistence.
