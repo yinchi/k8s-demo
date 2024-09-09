@@ -56,6 +56,12 @@ traefik_expose
 web_expose
 ```
 
+```{figure} /_static/traefik_dashboard.png
+:alt: Screenshot of the Traefik dashboard
+
+Screenshot of the Traefik dashboard exposed on `localhost:9000`.
+```
+
 ## HTTPRoute and Middlewares
 
 The directory `helm/charts/simple-service/` demonstrates how to create a `HTTPRoute` to Traefik.  The three template files create a `Deployment`, `Service`, and `HTTPRoute`.  The specification for the `HTTPRoute` contains the following:

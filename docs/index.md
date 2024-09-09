@@ -17,7 +17,7 @@ modules
 :hidden:
 :caption: Helm setup
 
-helm
-db
-traefik
+helm/helm
+helm/db
+helm/traefik
 :::
