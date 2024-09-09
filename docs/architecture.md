@@ -1,5 +1,6 @@
 # Architecture
 
+<!--
 ```{kroki}
 :type: plantuml
 :caption: Right-click -> "Open image in new tab"  to view full-size.
@@ -56,6 +57,12 @@ podC .. db1
 
 @enduml
 ```
+-->
+```{figure} _images/arch.svg
+:alt: Demo app architecture
+
+Right-click -> “Open image in new tab” to view full-size.
+```
 
 The above figure shows the conceptual design of this demo app. For illustrative purposes, we show additional services and database servers in the figure (as opposed to one of each in the actual implemenation).  We implement a single-node Kubernetes cluster using `kind`, which runs within a Docker container on the host machine.
 
@@ -63,4 +70,4 @@ The Kubernetes Services of the demo app are shown in grey, with the Traefik serv
 
 ## Exposing the app
 
-Note that ports 8000 and 9000 are exposed to `localhost` only by default. For security reasons, do **not** expose the Traefik dashboard (port 9000) to the internet.  To expose the web app, we can use a public reverse proxy service such as `ngrok` (using [these instructions](https://ngrok.com/docs/getting-started/)). 
+Note that ports 8000 and 9000 are exposed to `localhost` only by default. For security reasons, do **not** expose the Traefik dashboard (port 9000) to the internet.  To expose the web app, we can use a public reverse proxy service such as `ngrok` (using [these instructions](https://ngrok.com/docs/getting-started/)).

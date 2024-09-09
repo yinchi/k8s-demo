@@ -56,7 +56,7 @@ traefik_expose
 web_expose
 ```
 
-```{figure} /_static/traefik_dashboard.png
+```{figure} ../_images/traefik_dashboard.png
 :alt: Screenshot of the Traefik dashboard
 
 Screenshot of the Traefik dashboard exposed on `localhost:9000`.
