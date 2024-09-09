@@ -20,4 +20,5 @@ modules
 helm/helm
 helm/db
 helm/traefik
+helm/simple-service
 :::
